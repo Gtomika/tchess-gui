@@ -97,6 +97,7 @@
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -147,6 +148,7 @@
       <SubSystem>Windows</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -186,6 +188,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\Users\Gáspár Tamás\Downloads\CPictureCtrl\PictureCtrl.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="pch.h" />
@@ -194,6 +197,7 @@
     <ClInclude Include="TChessGUI.h" />
     <ClInclude Include="TChessGUIDoc.h" />
     <ClInclude Include="TChessGUIView.h" />
+    <ClInclude Include="TChessRootDialogView.h" />
     <ClInclude Include="tchess\board\board.h" />
     <ClInclude Include="tchess\board\evaluation.h" />
     <ClInclude Include="tchess\board\move.h" />
@@ -208,6 +212,7 @@
     <ClInclude Include="tchess\random\random_player.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\Users\Gáspár Tamás\Downloads\CPictureCtrl\PictureCtrl.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -218,6 +223,7 @@
     <ClCompile Include="TChessGUI.cpp" />
     <ClCompile Include="TChessGUIDoc.cpp" />
     <ClCompile Include="TChessGUIView.cpp" />
+    <ClCompile Include="TChessRootDialogView.cpp" />
     <ClCompile Include="tchess\board\board.cpp" />
     <ClCompile Include="tchess\board\evaluation.cpp" />
     <ClCompile Include="tchess\board\move.cpp" />
@@ -238,6 +244,30 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\TChess\res\tchess_icon.ico" />
+    <Image Include="res\dark_black_bishop.png" />
+    <Image Include="res\dark_black_king.png" />
+    <Image Include="res\dark_black_knight.png" />
+    <Image Include="res\dark_black_pawn.png" />
+    <Image Include="res\dark_black_queen.png" />
+    <Image Include="res\dark_black_rook.png" />
+    <Image Include="res\dark_white_bishop.png" />
+    <Image Include="res\dark_white_king.png" />
+    <Image Include="res\dark_white_knight.png" />
+    <Image Include="res\dark_white_pawn.png" />
+    <Image Include="res\dark_white_queen.png" />
+    <Image Include="res\dark_white_rook.png" />
+    <Image Include="res\light_black_bishop.png" />
+    <Image Include="res\light_black_king.png" />
+    <Image Include="res\light_black_knight.png" />
+    <Image Include="res\light_black_pawn.png" />
+    <Image Include="res\light_black_queen.png" />
+    <Image Include="res\light_black_rook.png" />
+    <Image Include="res\light_white_bishop.png" />
+    <Image Include="res\light_white_king.png" />
+    <Image Include="res\light_white_knight.png" />
+    <Image Include="res\light_white_pawn.png" />
+    <Image Include="res\light_white_queen.png" />
+    <Image Include="res\light_white_rook.png" />
     <Image Include="res\TChessGUI.ico" />
     <Image Include="res\TChessGUIDoc.ico" />
     <Image Include="res\tchess_icon.ico" />

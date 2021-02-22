@@ -75,6 +75,12 @@
     <ClInclude Include="tchess\random\random_player.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TChessRootDialogView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Users\Gáspár Tamás\Downloads\CPictureCtrl\PictureCtrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TChessGUI.cpp">
@@ -125,6 +131,12 @@
     <ClCompile Include="tchess\random\random_player.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TChessRootDialogView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Users\Gáspár Tamás\Downloads\CPictureCtrl\PictureCtrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="TChessGUI.rc">
@@ -147,6 +159,78 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\tchess_icon.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_black_bishop.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_black_king.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_black_knight.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_black_pawn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_black_queen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_black_rook.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_white_bishop.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_white_king.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_white_knight.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_white_pawn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_white_queen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_white_rook.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_black_bishop.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_black_king.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_black_knight.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_black_pawn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_black_queen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_black_rook.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_white_bishop.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_white_king.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_white_knight.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_white_pawn.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_white_queen.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_white_rook.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

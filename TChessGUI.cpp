@@ -11,6 +11,7 @@
 
 #include "TChessGUIDoc.h"
 #include "TChessGUIView.h"
+#include "TChessRootDialogView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -104,7 +105,7 @@ BOOL CTChessGUIApp::InitInstance()
 		IDR_MAINFRAME,
 		RUNTIME_CLASS(CTChessGUIDoc),
 		RUNTIME_CLASS(CMainFrame),       // main SDI frame window
-		RUNTIME_CLASS(CTChessGUIView));
+		RUNTIME_CLASS(TChessRootDialogView));
 	if (!pDocTemplate)
 		return FALSE;
 	AddDocTemplate(pDocTemplate);
@@ -122,6 +123,7 @@ BOOL CTChessGUIApp::InitInstance()
 		return FALSE;
 
 	// The one and only window has been initialized, so show and update it
+	m_pMainWnd->SetWindowPos(&m_pMainWnd->wndTop, 200, 200, 1200, 800, SWP_NOSIZE);
 	m_pMainWnd->ShowWindow(SW_SHOW);
 	m_pMainWnd->UpdateWindow();
 	return TRUE;

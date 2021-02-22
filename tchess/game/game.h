@@ -84,6 +84,11 @@ namespace tchess
 	public:
 		game() = delete;
 
+		~game() {
+			delete whitePlayer;
+			delete blackPlayer;
+		}
+
 		/**
 		 * Create the game, from references to both sides.
 		 */
