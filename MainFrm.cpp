@@ -7,6 +7,7 @@
 #include "TChessGUI.h"
 
 #include "MainFrm.h"
+#include "image_utils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -57,6 +58,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	SetIcon(hIcon, FALSE);
 
 	SetWindowPos(&wndTop, 0, 0, 1200, 950, 0);
+
+	tchess::loadChessImages(); //load images here for later use
 
 	return 0;
 }

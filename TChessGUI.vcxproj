@@ -209,6 +209,7 @@
     <ClInclude Include="tchess\game\player.h" />
     <ClInclude Include="tchess\greedy\greedy_player.h" />
     <ClInclude Include="tchess\human\human_player.h" />
+    <ClInclude Include="tchess\image_utils.h" />
     <ClInclude Include="tchess\random\random_player.h" />
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +235,7 @@
     <ClCompile Include="tchess\game\game.cpp" />
     <ClCompile Include="tchess\greedy\greedy_player.cpp" />
     <ClCompile Include="tchess\human\human_player.cpp" />
+    <ClCompile Include="tchess\image_utils.cpp" />
     <ClCompile Include="tchess\random\random_player.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +252,7 @@
     <Image Include="res\dark_black_pawn.png" />
     <Image Include="res\dark_black_queen.png" />
     <Image Include="res\dark_black_rook.png" />
+    <Image Include="res\dark_empty.png" />
     <Image Include="res\dark_white_bishop.png" />
     <Image Include="res\dark_white_king.png" />
     <Image Include="res\dark_white_knight.png" />
@@ -262,6 +265,7 @@
     <Image Include="res\light_black_pawn.png" />
     <Image Include="res\light_black_queen.png" />
     <Image Include="res\light_black_rook.png" />
+    <Image Include="res\light_empty.png" />
     <Image Include="res\light_white_bishop.png" />
     <Image Include="res\light_white_king.png" />
     <Image Include="res\light_white_knight.png" />

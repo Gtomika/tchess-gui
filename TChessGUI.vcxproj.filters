@@ -81,6 +81,9 @@
     <ClInclude Include="PictureCtrl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="tchess\image_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TChessGUI.cpp">
@@ -135,6 +138,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="PictureCtrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tchess\image_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -231,6 +237,12 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="res\light_white_rook.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\dark_empty.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\light_empty.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
