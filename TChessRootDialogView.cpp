@@ -91,6 +91,8 @@ void TChessRootDialogView::OnBnClickedStartGameButton()
 		AfxMessageBox(_T("Players must be selected!"), MB_OK | MB_ICONSTOP);
 		return;
 	}
+	//delete old game if there is one
+	if (gameObject != nullptr) delete gameObject;
 	//both players were selected
 	tchess::player* whitePlayer = playerFromText(whiteSelected, 0);
 	tchess::player* blackPlayer = playerFromText(blackSelected, 1);

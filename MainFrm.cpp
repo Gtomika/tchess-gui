@@ -56,6 +56,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	HICON hIcon = LoadIcon(AfxGetInstanceHandle(), MAKEINTRESOURCE(IDI_ICON1));
 	SetIcon(hIcon, FALSE);
 
+	SetWindowPos(&wndTop, 0, 0, 1200, 950, 0);
+
 	return 0;
 }
 
