@@ -2,6 +2,8 @@
 
 #include "game/game.h"
 
+#include "PictureCtrl.h"
+
 // TChessRootDialogView form view
 
 class TChessRootDialogView : public CFormView
@@ -22,9 +24,7 @@ public:
 	virtual void Dump(CDumpContext& dc) const;
 #endif
 #endif
-
-	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
-	virtual BOOL OnInitDialog();
+	virtual void OnInitialUpdate();
 
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support

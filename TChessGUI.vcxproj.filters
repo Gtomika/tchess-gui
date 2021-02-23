@@ -78,7 +78,7 @@
     <ClInclude Include="TChessRootDialogView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Users\Gáspár Tamás\Downloads\CPictureCtrl\PictureCtrl.h">
+    <ClInclude Include="PictureCtrl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -134,7 +134,7 @@
     <ClCompile Include="TChessRootDialogView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Users\Gáspár Tamás\Downloads\CPictureCtrl\PictureCtrl.cpp">
+    <ClCompile Include="PictureCtrl.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

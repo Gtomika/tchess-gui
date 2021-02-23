@@ -1,6 +1,8 @@
 // TChessRootDialogView.cpp : implementation file
 //
 
+#include <iostream>
+
 #include "pch.h"
 #include "TChessGUI.h"
 #include "TChessRootDialogView.h"
@@ -17,23 +19,17 @@ IMPLEMENT_DYNCREATE(TChessRootDialogView, CFormView)
 TChessRootDialogView::TChessRootDialogView()
 	: CFormView(IDD_ROOT_DIALOG_VIEW)
 {
-
+	gameObject = nullptr;
 }
 
 TChessRootDialogView::~TChessRootDialogView()
 {
 }
 
-int TChessRootDialogView::OnCreate(LPCREATESTRUCT lpCreateStruct)
+void TChessRootDialogView::OnInitialUpdate()
 {
-	return 0;
-}
-
-//Initialize views here
-BOOL TChessRootDialogView::OnInitDialog()
-{
-
-	return TRUE;
+	CFormView::OnInitialUpdate();
+	//initialize all views here
 }
 
 void TChessRootDialogView::DoDataExchange(CDataExchange* pDX)
@@ -44,8 +40,6 @@ void TChessRootDialogView::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
-//	ON_CBN_SELCHANGE(IDC_COMBO_WHITE_SELECT, &TChessRootDialogView::OnCbnSelchangeComboWhiteSelect)
-//	ON_CBN_SELCHANGE(IDC_COMBO_BLACK_SELECT, &TChessRootDialogView::OnCbnSelchangeComboBlackSelect)
 ON_BN_CLICKED(IDC_START_GAME_BUTTON, &TChessRootDialogView::OnBnClickedStartGameButton)
 END_MESSAGE_MAP()
 
@@ -70,6 +64,7 @@ void TChessRootDialogView::Dump(CDumpContext& dc) const
 tchess::player* playerFromText(const CString& text, unsigned int side) {
 	if (text.Compare(_T("Player (user controlled)"))) {
 		//TODO: create human player GUI
+		return nullptr;
 	}
 	else if (text.Compare(_T("TChess engine"))) {
 		return new tchess::engine(side);
