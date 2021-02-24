@@ -24,7 +24,17 @@ namespace tchess
 	 */
 	class player {
 
+	protected:
+
+		//Side of the player
+		unsigned int side;
+
+		//If the agent uses GUI to make its move
+		bool usesGui;
+
 	public:
+		player(unsigned int side, bool useGui) : side(side), usesGui(useGui) {}
+
 		virtual ~player() {}
 
 		virtual move makeMove(const game& gameController) {

@@ -21,9 +21,6 @@ namespace tchess
 	 */
 	class random_player: public player {
 
-		//The side on which this agent player.
-		unsigned int side;
-
 		//Board object.
 		chessboard board;
 
@@ -33,7 +30,7 @@ namespace tchess
 	public:
 		random_player() = delete;
 
-		random_player(unsigned int side) : side(side) {}
+		random_player(unsigned int side) : player(side, false) {}
 
 		/*
 		 * Will submit one randomly selected legal move.

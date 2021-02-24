@@ -10,6 +10,7 @@
 #include "engine/engine.h"
 #include "greedy/greedy_player.h"
 #include "random/random_player.h"
+#include "human/human_player_gui.h"
 
 
 // TChessRootDialogView
@@ -61,10 +62,9 @@ void TChessRootDialogView::Dump(CDumpContext& dc) const
 #endif //_DEBUG
 
 //player selector helper
-tchess::player* playerFromText(const CString& text, unsigned int side) {
+tchess::player* TChessRootDialogView::playerFromText(const CString& text, unsigned int side) {
 	if (text.Compare(_T("Player (user controlled)"))) {
-		//TODO: create human player GUI
-		return nullptr;
+		return new tchess::human_player_gui(side, this);
 	}
 	else if (text.Compare(_T("TChess engine"))) {
 		return new tchess::engine(side);

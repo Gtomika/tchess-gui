@@ -1,8 +1,9 @@
 #pragma once
 
-#include "game/game.h"
+#include <afxext.h>
 
-#include "PictureCtrl.h"
+#include "game/game.h"
+#include "game/player.h"
 
 // TChessRootDialogView form view
 
@@ -43,6 +44,9 @@ public:
 	
 	//Pointer to the game object, or null if no game is ongoing
 	tchess::game* gameObject;
+
+private:
+	tchess::player* playerFromText(const CString& text, unsigned int side);
 };
 
 

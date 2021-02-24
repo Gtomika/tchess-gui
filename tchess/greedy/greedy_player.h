@@ -21,9 +21,6 @@ namespace tchess
 	 */
 	class greedy_player: public player {
 
-		//The side on which this agent plays.
-		unsigned int side;
-
 		//Board object.
 		chessboard board;
 
@@ -33,7 +30,7 @@ namespace tchess
 	public:
 		greedy_player() = delete;
 
-		greedy_player(unsigned int side) : side(side) {}
+		greedy_player(unsigned int side) : player(side, false) {}
 
 		/*
 		 * Will submit the best move it can find after evaluating the

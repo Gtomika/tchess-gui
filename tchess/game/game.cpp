@@ -6,74 +6,9 @@
  */
 
 #include "game.h"
-#include "human/human_player.h"
-#include "random/random_player.h"
-#include "greedy/greedy_player.h"
-#include "engine/engine.h"
 
 namespace tchess
 {
-	char selectPlayerForSide(const std::string& sideName) {
-		bool selected = false;
-		std::string selection;
-		while(!selected) {
-			std::cout << "---------------------------" << std::endl
-					  << "Select who will play " << sideName << ":" << std::endl
-					  << " - Type p for player!" << std::endl
-					  << " - Type e for engine!" << std::endl
-					  << " - Type r for the random move maker!" << std::endl
-					  << " - Type g for the greedy move maker!" << std::endl;
-
-			std::getline(std::cin, selection);
-			if(selection == "p") {
-				std::cout << sideName << " will be controlled by a player." << std::endl;
-				selected = true;
-			} else if(selection == "e") {
-				std::cout << sideName << " will be controlled by the TChess engine." << std::endl;
-				selected = true;
-			} else if(selection == "r") {
-				std::cout << sideName << " will be controlled by the Random move maker." << std::endl;
-				selected = true;
-			} else if(selection == "g") {
-				std::cout << sideName << " will be controlled by the Greedy move maker." << std::endl;
-				selected = true;
-			} else {
-				std::cout << "Invalid selection, please try again!" << std::endl;
-			}
-		}
-		return selection[0];
-	}
-
-	bool selectPlayersAndStart() {
-		char whiteSelect = selectPlayerForSide("White");
-		char blackSelect = selectPlayerForSide("Black");
-		player* whitePlayer = nullptr;
-		player* blackPlayer = nullptr;
-		if(whiteSelect == 'p') {
-			whitePlayer = new human_player_console(white);
-		} else if(whiteSelect == 'e') {
-			whitePlayer = new engine(white);
-		} else if(whiteSelect == 'r') {
-			whitePlayer = new random_player(white);
-		} else if(whiteSelect == 'g') {
-			whitePlayer = new greedy_player(white);
-		}
-		if(blackSelect == 'p') {
-			blackPlayer = new human_player_console(black);
-		} else if(blackSelect == 'e') {
-			blackPlayer = new engine(black);
-		} else if(blackSelect == 'r') {
-			blackPlayer = new random_player(black);
-		} else if(blackSelect == 'g') {
-			blackPlayer = new greedy_player(black);
-		}
-		game gameController(whitePlayer, blackPlayer);
-		bool startNewGame = gameController.playGame();
-		if(whitePlayer != nullptr) delete whitePlayer;
-		if(blackPlayer != nullptr) delete blackPlayer;
-		return startNewGame;
-	}
-
 	//game class implementation
 
 	bool game::playGame() {

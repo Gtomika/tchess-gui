@@ -5,6 +5,8 @@
  *      Author: Gáspár Tamás
  */
 
+#define TRANSP_TABLE_SIZE 256000000 //in bytes
+
 #include "transposition_table.h"
 
 namespace tchess
@@ -66,7 +68,7 @@ namespace tchess
 
 	const transposition_entry EMPTY_ENTRY = transposition_entry();
 
-	const unsigned int def_transposition_table_size = 256000000 / sizeof(transposition_entry);
+	const unsigned int def_transposition_table_size = TRANSP_TABLE_SIZE / sizeof(transposition_entry);
 }
 
 

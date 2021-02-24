@@ -10,6 +10,8 @@
 #ifndef SRC_ENGINE_ENGINE_H_
 #define SRC_ENGINE_ENGINE_H_
 
+#define USE_OPENING_BOOK true
+
 #include "game/player.h"
 #include "polyglot.h"
 #include "transposition_table.h"
@@ -26,9 +28,6 @@ namespace tchess
 	 * Player agent for the Tchess engine.
 	 */
 	class engine: public player {
-
-		//The side on which this agent plays.
-		unsigned int side;
 
 		//Search depth.
 		unsigned int depth;
@@ -54,7 +53,7 @@ namespace tchess
 		engine() = delete;
 
 		engine(unsigned int side, unsigned int depth = default_depth)
-			: side(side), depth(depth), opening(true) {
+			: player(side, false), depth(depth), opening(USE_OPENING_BOOK) {
 			ttable = new transposition_table(def_transposition_table_size);
 		}
 

@@ -208,7 +208,7 @@
     <ClInclude Include="tchess\game\game.h" />
     <ClInclude Include="tchess\game\player.h" />
     <ClInclude Include="tchess\greedy\greedy_player.h" />
-    <ClInclude Include="tchess\human\human_player.h" />
+    <ClInclude Include="tchess\human\human_player_gui.h" />
     <ClInclude Include="tchess\image_utils.h" />
     <ClInclude Include="tchess\random\random_player.h" />
   </ItemGroup>
@@ -234,7 +234,7 @@
     <ClCompile Include="tchess\engine\transposition_table.cpp" />
     <ClCompile Include="tchess\game\game.cpp" />
     <ClCompile Include="tchess\greedy\greedy_player.cpp" />
-    <ClCompile Include="tchess\human\human_player.cpp" />
+    <ClCompile Include="tchess\human\human_player_gui.cpp" />
     <ClCompile Include="tchess\image_utils.cpp" />
     <ClCompile Include="tchess\random\random_player.cpp" />
   </ItemGroup>

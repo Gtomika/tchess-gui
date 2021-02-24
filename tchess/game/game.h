@@ -19,19 +19,6 @@
 
 namespace tchess
 {
-	/**
-	 * Allows the player to select who will play White and Black sides.
-	 */
-	char selectPlayerForSide(const std::string& sideName);
-
-	/*
-	 * Allows the user to select who will play on both sides. For example, player vs engine or
-	 * player vs player.
-	 * After selection, the game will be fully player out. Returns true if a new game is to
-	 * be started.
-	 */
-	bool selectPlayersAndStart();
-
 	class player;
 
 	/*
