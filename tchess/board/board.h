@@ -28,6 +28,7 @@
 #include <utility>
 
 #include "move.h"
+#include "PictureCtrl.h"
 
 namespace tchess
 {
@@ -378,6 +379,11 @@ namespace tchess
 	 * a square from its name. For example for "h1" it will return 63.
 	 */
 	unsigned int createSquareNumber(const std::string& squareName);
+
+	/*
+	 * Draws the given board in the GUI. The vector of picture controls is used to access the rectangles where the squares will be drawn.
+	 */
+	void drawBoard(const chessboard& board, std::vector<CPictureCtrl>& squareControls);
 }
 
 #endif /* SRC_BOARD_BOARD_H_ */

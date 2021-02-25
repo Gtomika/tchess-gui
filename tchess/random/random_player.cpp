@@ -27,8 +27,8 @@ namespace tchess
 		return select_randomly(start, end, gen);
 	}
 
-	move random_player::makeMove(const game& gameController) {
-		const std::vector<move>& gameMoves = gameController.getMoves();
+	move random_player::makeMove(game* gameController) {
+		const std::vector<move>& gameMoves = gameController->getMoves();
 		if(gameMoves.size() > 0) {
 			move enemyMove = gameMoves.back(); //update our board with enemy move
 			board.makeMove(enemyMove, 1-side);

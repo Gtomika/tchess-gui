@@ -10,16 +10,28 @@
 #ifndef SRC_GAME_GAME_H_
 #define SRC_GAME_GAME_H_
 
+#define ALLOWED_ILLEGAL_MOVES 5
+
 #include <iostream>
 #include <vector>
+
+#include "TChessRootDialogView.h"
 
 #include "board/board.h"
 #include "board/move.h"
 #include "player.h"
 
+class TChessRootDialogView;
+
 namespace tchess
 {
 	class player;
+
+	//Used in the game constructor
+	extern const char humanPlayerCode;
+	extern const char randomPlayerCode;
+	extern const char greedyPlayerCode;
+	extern const char engineCode;
 
 	/*
 	 * This template connects the two player's sides. It maintaints the game board and checks if
@@ -68,19 +80,18 @@ namespace tchess
 		 */
 		unsigned int illegalMoveCounter[2];
 
+		//Used by the controller and players to update the GUI.
+		const TChessRootDialogView* view;
+
 	public:
 		game() = delete;
 
-		~game() {
-			delete whitePlayer;
-			delete blackPlayer;
-		}
-
 		/**
-		 * Create the game, from references to both sides.
+		 * Create the game controller object.
 		 */
-		game(player* wp, player* bp) : gameEnded(false), startNewGame(false),
-				whitePlayer(wp), blackPlayer(bp), illegalMoveCounter{5,5} {}
+		game(char whiteCode, char blackCode, const TChessRootDialogView* view);
+
+		~game();
 
 		/**
 		 * This method starts the game by requesting the first move from the white player.

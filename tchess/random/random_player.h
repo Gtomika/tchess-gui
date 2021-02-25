@@ -35,9 +35,9 @@ namespace tchess
 		/*
 		 * Will submit one randomly selected legal move.
 		 */
-		move makeMove(const game& gameController);
+		move makeMove(game* gameController) override;
 
-		std::string description() const;
+		std::string description() const override;
 	};
 }
 

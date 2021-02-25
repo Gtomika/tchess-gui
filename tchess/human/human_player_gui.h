@@ -19,12 +19,12 @@ namespace tchess {
 		/*
 		 * Waits until the user clicks 2 squares, then attempts to generate a move from those squares.
 		 */
-		virtual move makeMove(const game& gameController);
+		move makeMove(game* gameController) override;
 
 		/**
 		 * Return a string describing this player as human controlled (includes played side).
 		 */
-		virtual std::string description() const;
+		std::string description() const override;
 	};
 }
 

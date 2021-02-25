@@ -1,9 +1,20 @@
 #pragma once
 
+#ifndef TCHESS_ROOT_DIALOG_VIEW_H_
+#define TCHESS_ROOT_DIALOG_VIEW_H_
+
 #include <afxext.h>
+
+#include <vector>
 
 #include "game/game.h"
 #include "game/player.h"
+#include "PictureCtrl.h"
+
+namespace tchess
+{
+	class game;
+}
 
 // TChessRootDialogView form view
 
@@ -39,6 +50,9 @@ public:
 	CComboBox comboWhiteSelector;
 	// Black player selector combo box
 	CComboBox comboBlackSelector;
+	//the control variables for all the square views
+	std::vector<CPictureCtrl> squareControls;
+
 
 	//Player and game related data
 	
@@ -46,7 +60,10 @@ public:
 	tchess::game* gameObject;
 
 private:
-	tchess::player* playerFromText(const CString& text, unsigned int side);
+	char playerFromText(const CString& text);
+public:
+	afx_msg void OnStnClickedGameResult();
 };
 
+#endif
 

@@ -4,6 +4,7 @@
 #include <cstdlib>
 
 #include "board.h"
+#include "image_utils.h"
 
 /*
  * board.cpp
@@ -272,6 +273,8 @@ namespace tchess
 		kingsideCastleRight[black] = true;
 		queensideCastleRight[white] = true;
 		queensideCastleRight[black] = true;
+		hasCastled[white] = false;
+		hasCastled[black] = false;
 		enPassantCaptureSquares[white] = noEnPassant;
 		enPassantCaptureSquares[black] = noEnPassant;
 		sideToMove = white; //white begins
@@ -627,7 +630,7 @@ namespace tchess
 									return  true;
 								}
 							} else { //non pawn pieces
-								if(canSlide[enemyPiece]) { //sliding piece, so ditance does not matter
+								if(canSlide[enemyPiece]) { //sliding piece, so distance does not matter
 									for(unsigned int k = 0; k<offsetAmount[enemyPiece]; ++k) { //check all direction the enemy piece can attack on
 										if(direction == offsets[enemyPiece][k]) { //if the enemy sliding piece has the direction we are checking, then it can attack
 											//std::cout << "Attacking sliding piece found" << std::endl;
@@ -689,6 +692,69 @@ namespace tchess
 		}
 		board.unmakeMove(playerMove, side, capturedPiece);
 		return legal;
+	}
+
+	//Helper method that checks 
+	bool isLightSquare(unsigned int square) {
+		//detemine rank and file
+		unsigned int rank = square / 8;
+		unsigned int file = square % 8;
+		if (rank % 2 == 0) {
+			if (file % 2 == 0) {
+				return true;
+			}
+			else {
+				return false;
+			}
+		}
+		else {
+			if (file % 2 == 0) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+	}
+
+	void drawBoard(const chessboard& board, std::vector<CPictureCtrl>& squareControls)
+	{
+		for (unsigned int square = 0; square < 64; ++square) {
+			if (isLightSquare(square)) {
+				//we are on a light square
+				if (board[square] > 0) {
+					//white piece
+					unsigned int piece = board[square];
+					squareControls[square].Load(light_white_images[piece].data(), light_white_images[piece].size());
+				}
+				else if (board[square] < 0) {
+					//black piece
+					unsigned int piece = std::abs(board[square]);
+					squareControls[square].Load(light_black_images[piece].data(), light_black_images[piece].size());
+				}
+				else {
+					//empty square
+					squareControls[square].Load(light_white_images[empty].data(), light_white_images[empty].size());
+				}
+			}
+			else {
+				//we are on a dark square
+				if (board[square] > 0) {
+					//white piece
+					unsigned int piece = board[square];
+					squareControls[square].Load(dark_white_images[piece].data(), dark_white_images[piece].size());
+				}
+				else if (board[square] < 0) {
+					//black piece
+					unsigned int piece = std::abs(board[square]);
+					squareControls[square].Load(dark_black_images[piece].data(), dark_black_images[piece].size());
+				}
+				else {
+					//empty square
+					squareControls[square].Load(dark_white_images[empty].data(), dark_white_images[empty].size());
+				}
+			}
+		}
 	}
 }
 

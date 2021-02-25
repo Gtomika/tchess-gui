@@ -25,7 +25,6 @@
 #define IDC_COMBO_BLACK_SELECT          1001
 #define IDC_BUTTON1                     1002
 #define IDC_START_GAME_BUTTON           1002
-
 #define IDC_SQUARE_0                    1003
 #define IDC_SQUARE_1                    1004
 #define IDC_SQUARE_2                    1005
@@ -90,7 +89,12 @@
 #define IDC_SQUARE_61                   1064
 #define IDC_SQUARE_62                   1065
 #define IDC_SQUARE_63                   1066
-
+#define IDC_GAME_STATUS                 1067
+#define IDC_GAME_RESULT                 1069
+#define IDC_MAKE_MOVE                   1070
+#define IDC_USE_MAKE_MOVE_BUTTON        1071
+#define IDC_WHITE_NAME                  1072
+#define IDC_BLACK_NAME                  1073
 #define ID_PLAY_STARTNEWGAME            32771
 #define ID_SETTINGS_ENGINEDIFFICULTY    32772
 #define ID_ENGINEDIFFICULTY_DEPTH2      32773
@@ -113,7 +117,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        313
 #define _APS_NEXT_COMMAND_VALUE         32786
-#define _APS_NEXT_CONTROL_VALUE         1005
+#define _APS_NEXT_CONTROL_VALUE         1073
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

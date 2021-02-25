@@ -36,9 +36,9 @@ namespace tchess
 		 * Will submit the best move it can find after evaluating the
 		 * result of all his possible moves.
 		 */
-		move makeMove(const game& gameController);
+		move makeMove(game* gameController) override;
 
-		std::string description() const;
+		std::string description() const override;
 	};
 
 }

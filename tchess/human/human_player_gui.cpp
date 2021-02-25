@@ -2,7 +2,7 @@
 
 namespace tchess
 {
-    move human_player_gui::makeMove(const game& gameController)
+    move human_player_gui::makeMove(game* gameController)
     {
         return move();
     }

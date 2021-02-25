@@ -12,6 +12,7 @@
 #include <string>
 
 #include "game.h"
+#include "board/move.h"
 
 namespace tchess
 {
@@ -37,13 +38,9 @@ namespace tchess
 
 		virtual ~player() {}
 
-		virtual move makeMove(const game& gameController) {
-			throw std::runtime_error("Do not directly use player base class!");
-		}
+		virtual move makeMove(game* gameController) abstract;
 
-		virtual std::string description() const {
-			throw std::runtime_error("Do not directly use player base class!");
-		}
+		virtual std::string description() const abstract;
 	};
 }
 

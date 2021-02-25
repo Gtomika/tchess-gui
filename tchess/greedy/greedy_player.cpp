@@ -19,8 +19,8 @@ namespace tchess
 		return enemyMoves;
 	}
 
-	move greedy_player::makeMove(const game& gameController) {
-		const std::vector<move>& gameMoves = gameController.getMoves();
+	move greedy_player::makeMove(game* gameController) {
+		const std::vector<move>& gameMoves = gameController->getMoves();
 		if(gameMoves.size() > 0) {
 			move enemyMove = gameMoves.back(); //update our board with enemy move
 			board.makeMove(enemyMove, 1-side);

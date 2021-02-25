@@ -7,9 +7,68 @@
 
 #include "game.h"
 
+#include "human/human_player_gui.h"
+#include "engine/engine.h"
+#include "random/random_player.h"
+#include "greedy/greedy_player.h"
+
 namespace tchess
 {
+	const char humanPlayerCode = 'P';
+	const char randomPlayerCode = 'R';
+	const char greedyPlayerCode = 'G';
+	const char engineCode = 'E';
+
 	//game class implementation
+
+	game::game(char whiteCode, char blackCode, const TChessRootDialogView* view) : gameEnded(false), startNewGame(false), 
+		illegalMoveCounter{ ALLOWED_ILLEGAL_MOVES, ALLOWED_ILLEGAL_MOVES }, view(view)
+	{
+		switch (whiteCode)
+		{
+		case humanPlayerCode:
+			whitePlayer = new human_player_gui(white, view);
+			break;
+		case randomPlayerCode:
+			whitePlayer = new random_player(white);
+			break;
+		case greedyPlayerCode:
+			whitePlayer = new greedy_player(white);
+			break;
+		case engineCode:
+			whitePlayer = new engine(white);
+			break;
+		default:
+			throw std::runtime_error("Invalid player code: " + whiteCode);
+			whitePlayer = nullptr;
+			break;
+		}
+		switch (blackCode)
+		{
+		case humanPlayerCode:
+			blackPlayer = new human_player_gui(black, view);
+			break;
+		case randomPlayerCode:
+			blackPlayer = new random_player(black);
+			break;
+		case greedyPlayerCode:
+			blackPlayer = new greedy_player(black);
+			break;
+		case engineCode:
+			blackPlayer = new engine(black);
+			break;
+		default:
+			throw std::runtime_error("Invalid player code: " + blackCode);
+			blackPlayer = nullptr;
+			break;
+		}
+	}
+
+	game::~game() 
+	{
+		delete whitePlayer;
+		delete blackPlayer;
+	}
 
 	bool game::playGame() {
 		std::cout << "The game begins: " << whitePlayer->description() << " vs " << blackPlayer->description() << std::endl;
@@ -52,7 +111,7 @@ namespace tchess
 		std::string playerWhoMoves = side==white ? whitePlayer->description() : blackPlayer->description();
 		std::cout << playerWhoMoves << "'s turn to move..." << std::endl;
 		//get the next move
-		move m = side == white ? whitePlayer->makeMove(*this) : blackPlayer->makeMove(*this);
+		move m = side == white ? whitePlayer->makeMove(this) : blackPlayer->makeMove(this);
 
 		if(m.isResign()) { //check if player resigned before going any further
 			std::string playerWhoWon = side==white ? blackPlayer->description() : whitePlayer->description();

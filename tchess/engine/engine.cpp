@@ -73,9 +73,9 @@ namespace tchess
 			if(entry.entryType == exact) { //exact match
 				return entry.score;
 			} else if(entry.entryType == lowerBound) {
-				alpha = std::max(alpha, entry.score);
+				alpha = max(alpha, entry.score);
 			} else if(entry.entryType == upperBound) {
-				beta = std::min(beta, entry.score);
+				beta = min(beta, entry.score);
 			}
 			if(alpha >= beta) return entry.score;
 		}
@@ -144,8 +144,8 @@ namespace tchess
 		return alpha;
 	}
 
-	move engine::makeMove(const game& gameController) {
-		const std::vector<move>& gameMoves = gameController.getMoves();
+	move engine::makeMove(game* gameController) {
+		const std::vector<move>& gameMoves = gameController->getMoves();
 		if(gameMoves.size() > 0) {
 			move enemyMove = gameMoves.back(); //update our board with enemy move
 			board.makeMove(enemyMove, 1-side);
