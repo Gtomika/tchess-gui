@@ -51,10 +51,19 @@ void TChessRootDialogView::DoDataExchange(CDataExchange* pDX)
 	for (size_t i = 0; i < NUM_SQUARES; ++i) {
 		DDX_Control(pDX, IDC_SQUARE_0 + i, squareControls[i]);
 	}
+	DDX_Control(pDX, IDC_GAME_STATUS, gameStatus);
+	DDX_Control(pDX, IDC_WHITE_NAME, whitePlayerName);
+	DDX_Control(pDX, IDC_BLACK_NAME, blackPlayerName);
+	DDX_Control(pDX, IDC_TURN_TO_MOVE, turnToMove);
+	DDX_Control(pDX, IDC_GAME_RESULT, gameResult);
+	DDX_Control(pDX, IDC_GAME_REASON, gameResultReason);
+	DDX_Control(pDX, IDC_USE_MAKE_MOVE_BUTTON, useMakeMoveCheckbox);
+	DDX_Control(pDX, IDC_MAKE_MOVE, makeMoveButton);
 }
 
 BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
 ON_BN_CLICKED(IDC_START_GAME_BUTTON, &TChessRootDialogView::OnBnClickedStartGameButton)
+ON_BN_CLICKED(IDC_MAKE_MOVE, &TChessRootDialogView::OnBnClickedMakeMove)
 END_MESSAGE_MAP()
 
 
@@ -76,13 +85,13 @@ void TChessRootDialogView::Dump(CDumpContext& dc) const
 
 //player selector helper
 char TChessRootDialogView::playerFromText(const CString& text) {
-	if (text.Compare(_T("Player (user controlled)"))) {
+	if (text.Compare(_T("Player (user controlled)")) == 0) {
 		return tchess::humanPlayerCode;
 	}
-	else if (text.Compare(_T("TChess engine"))) {
+	else if (text.Compare(_T("TChess engine")) == 0) {
 		return tchess::engineCode;
 	}
-	else if (text.Compare(_T("Greedy move maker"))) {
+	else if (text.Compare(_T("Greedy move maker")) == 0) {
 		return tchess::greedyPlayerCode;
 	}
 	else { //must be random
@@ -94,6 +103,11 @@ char TChessRootDialogView::playerFromText(const CString& text) {
 
 void TChessRootDialogView::OnBnClickedStartGameButton()
 {
+	if (gameObject != nullptr && gameObject->gameOngoing()) {
+		//there is an active game. ask confirmation
+		int res = AfxMessageBox(_T("A game is in progress. Are you sure you want to start a new one?"), MB_YESNO | MB_ICONWARNING);
+		if (res != IDYES) return; //user chose to abort
+	}
 	//extract text from combo boxes
 	CString whiteSelected;
 	whiteSelected.Empty();
@@ -111,7 +125,19 @@ void TChessRootDialogView::OnBnClickedStartGameButton()
 	//both players were selected
 	char whitePlayerCode = playerFromText(whiteSelected);
 	char blackPlayerCode = playerFromText(blackSelected);
+	//check if we should use 'make move' button
+	bool useMakeMove = useMakeMoveCheckbox.GetCheck();
+	makeMoveButton.EnableWindow(useMakeMove); //enable or disable button
 	//create game object
-	gameObject = new tchess::game(whitePlayerCode, blackPlayerCode, this);
-	//TODO: start game
+	gameObject = new tchess::game(whitePlayerCode, blackPlayerCode, this, useMakeMove);
+	gameObject->startGame();
+}
+
+//called when the make move button is clicked.
+void TChessRootDialogView::OnBnClickedMakeMove()
+{
+	if (gameObject == nullptr) return;
+	if (!gameObject->gameOngoing()) return;
+	//tell the game controller to make the next move
+	gameObject->nextMove();
 }

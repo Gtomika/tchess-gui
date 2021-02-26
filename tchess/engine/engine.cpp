@@ -170,8 +170,7 @@ namespace tchess
 	}
 
 	std::string engine::description() const {
-		std::string sideName = side == white ? "White" : "Black";
-		return "Tchess engine (" + sideName + ")";
+		return "Tchess engine";
 	}
 }
 

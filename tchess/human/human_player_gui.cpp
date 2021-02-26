@@ -9,7 +9,6 @@ namespace tchess
 
     std::string human_player_gui::description() const
     {
-        std::string sideName = side == white ? "White" : "Black";
-        return "Human controlled player (" + sideName + ")";
+        return "User controlled player";
     }
 }

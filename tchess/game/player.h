@@ -41,6 +41,10 @@ namespace tchess
 		virtual move makeMove(game* gameController) abstract;
 
 		virtual std::string description() const abstract;
+
+		bool isGuiInteractive() {
+			return usesGui;
+		}
 	};
 }
 

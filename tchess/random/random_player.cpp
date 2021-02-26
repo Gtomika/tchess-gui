@@ -49,8 +49,7 @@ namespace tchess
 	}
 
 	std::string random_player::description() const {
-		std::string sideName = side == white ? "White" : "Black";
-		return "Random move maker (" + sideName + ")";
+		return "Random move maker";
 	}
 }
 

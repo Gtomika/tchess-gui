@@ -73,8 +73,7 @@ namespace tchess
 }
 
 	std::string greedy_player::description() const {
-		std::string sideName = side == white ? "White" : "Black";
-		return "Greedy move maker (" + sideName + ")";
+		return "Greedy move maker";
 	}
 }
 

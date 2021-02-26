@@ -45,9 +45,13 @@ namespace tchess
 	 */
 	class game {
 
+		//Stores if the game is ongoing or not.
 		bool gameEnded;
 
-		bool startNewGame;
+		/*
+		* Stores if the controller should wait for the user to click 'next move' before making the next move.
+		*/
+		bool waitWithMoves;
 
 		/**
 		 * The object that stores the current state of the board.
@@ -81,7 +85,7 @@ namespace tchess
 		unsigned int illegalMoveCounter[2];
 
 		//Used by the controller and players to update the GUI.
-		const TChessRootDialogView* view;
+		TChessRootDialogView* view;
 
 	public:
 		game() = delete;
@@ -89,16 +93,9 @@ namespace tchess
 		/**
 		 * Create the game controller object.
 		 */
-		game(char whiteCode, char blackCode, const TChessRootDialogView* view);
+		game(char whiteCode, char blackCode, TChessRootDialogView* view, bool wait);
 
 		~game();
-
-		/**
-		 * This method starts the game by requesting the first move from the white player.
-		 * Then it will run until the game is not over, and after that it will return true
-		 * if the user wants to start another game.
-		 */
-		bool playGame();
 
 		/*
 		 * Gets the move list of the game. Used by player agents to learn about the opponents
@@ -106,8 +103,24 @@ namespace tchess
 		 */
 		const std::vector<move>& getMoves() const;
 
+		//Checks if game has ended.
+		bool gameOngoing() const;
+
+		//Starts the game.
+		void startGame();
+
+		/*
+		* This is the method of the game controller that advances the game.
+		*/
+		void nextMove();
+
+		/*
+		* Used by gui interactive players to submit their move to the controller.
+		*/
+		void submitMove(const move& m);
+
 	private:
-		/**
+		/*
 		 * This method asks the player agent whose turn it is to move to submit a move.
 		 * This is done by the players 'makeMove' method. Then, it checks if this move
 		 * is legal.
@@ -116,8 +129,13 @@ namespace tchess
 		 */
 		void acceptMove();
 
+		/*
+		* Overload for gui interactive players. For such players, the 'makeMove' method will not be called, instead they 
+		* use the GUI to select a move, and that is passed to the controller.
+		*/
+		void acceptMove(move m);
 
-		/**
+		/*
 		 * This method checks if a move is valid. It will take into consideration the board and
 		 * the game_information object.
 		 *
@@ -127,10 +145,9 @@ namespace tchess
 		move_legality_result isValidMove(const move& playerMove, std::vector<move>& pseudoLegalMoves);
 
 		/*
-		 * Called when the game has ended. Prints information about the ending.
-		 * Returns true if the user chose to start a new game.
+		 * Called when the game has ended. Updates the UI with results.
 		 */
-		bool endGame(bool draw, const std::string& winninSide, const std::string& message);
+		void endGame(bool draw, unsigned int winningSide, const std::string& message);
 	};
 }
 

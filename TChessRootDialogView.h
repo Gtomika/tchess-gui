@@ -43,8 +43,15 @@ protected:
 
 	DECLARE_MESSAGE_MAP()
 
+private:
+	char playerFromText(const CString& text);
+
 public:
 	afx_msg void OnBnClickedStartGameButton();
+	afx_msg void OnBnClickedMakeMove();
+
+	//Pointer to the game object, or null if no game is ongoing
+	tchess::game* gameObject;
 
 	// White player selector combo box
 	CComboBox comboWhiteSelector;
@@ -52,17 +59,23 @@ public:
 	CComboBox comboBlackSelector;
 	//the control variables for all the square views
 	std::vector<CPictureCtrl> squareControls;
-
-
-	//Player and game related data
+	//Control variable for the game status text box.
+	CStatic gameStatus;
+	// Control variable for the white player name display text box.
+	CStatic whitePlayerName;
+	// Control variable for the black player name display text box.
+	CStatic blackPlayerName;
+	// Control variable for the text box that displays whose turn it is to move.
+	CStatic turnToMove;
+	// Control variable for the text box displaying the game result.
+	CStatic gameResult;
+	// Control variable for the text box displaying the resason why the game ended.
+	CStatic gameResultReason;
+	// Control variable of the use make move checkbox.
+	CButton useMakeMoveCheckbox;
+	// Control variable for the make move button.
+	CButton makeMoveButton;
 	
-	//Pointer to the game object, or null if no game is ongoing
-	tchess::game* gameObject;
-
-private:
-	char playerFromText(const CString& text);
-public:
-	afx_msg void OnStnClickedGameResult();
 };
 
 #endif
