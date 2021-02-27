@@ -21,7 +21,7 @@ namespace tchess
 
 	//game class implementation
 
-	game::game(char whiteCode, char blackCode, TChessRootDialogView* view, bool wait) : gameEnded(false), waitWithMoves(wait), 
+	game::game(char whiteCode, char blackCode, TChessRootDialogView* view, bool wait) : gameEnded(false), waitWithMoves(wait), awaitingMove(false),
 		illegalMoveCounter{ ALLOWED_ILLEGAL_MOVES, ALLOWED_ILLEGAL_MOVES }, view(view)
 	{
 		switch (whiteCode)
@@ -88,34 +88,55 @@ namespace tchess
 		}
 	}
 
+	//This struct is passed in to the background thread
+	struct thread_param {
+		player* playerWhoMoves;
+		game* gameController;
+		thread_param(player* p, game* g) : playerWhoMoves(p), gameController(g) {}
+	};
+
+	/*
+	* The background process that calculates a non GUI interactive players move. The parameter is a pointer 
+	* to a thread_param object.
+	*/
+	UINT calculateMove(LPVOID param) {
+		thread_param* tp = (thread_param*)param;
+		move m = tp->playerWhoMoves->makeMove(tp->gameController);
+		//allocate a move object
+		move* movePointer = new move(m);
+		//post message with the calculated move
+		LPARAM lpMove = reinterpret_cast<LPARAM>(movePointer);
+		PostMessage(tp->gameController->getView()->GetSafeHwnd(), MOVE_CALCULATED_MESSAGE, 0, lpMove);
+		//free memory, return sucess
+		delete param;
+		return 0;
+	}
+
 	void game::nextMove()
 	{
 		if (info.getSideToMove() == white) {
 			//white to move
 			if (!whitePlayer->isGuiInteractive()) {
-				//player doesn't use gui, controller must ask for the next move
-				acceptMove();
-				drawBoard(board, view->squareControls); //update board to reflect changes
+				//launch thread that calculates the move
+				thread_param* param = new thread_param(whitePlayer, this);
+				AfxBeginThread(calculateMove, param);
 			}
 			//player uses gui, the 'submitMove' method will be called
 		}
 		else {
 			//black to move
 			if (!blackPlayer->isGuiInteractive()) {
-				acceptMove();
-				drawBoard(board, view->squareControls);
+				//launch thread that calculates the move
+				thread_param* param = new thread_param(blackPlayer, this);
+				AfxBeginThread(calculateMove, param);
 			}
 		}
-		//if the make move button is not used AND the next player is not GUI interactive then instantly make the next move
-		bool nextPlayerGuiInteractive = info.getSideToMove() == white ? whitePlayer->isGuiInteractive() : blackPlayer->isGuiInteractive();
-		if (!waitWithMoves && !nextPlayerGuiInteractive) {
-			nextMove();
-		}
+		awaitingMove = true; //the controller is now waiting for the move from the GUI or from the background thread
 	}
 
 	void game::submitMove(const move& m)
 	{
-		//gui interactive player called this with the move it made
+		awaitingMove = false; //move recived
 		acceptMove(m);
 		drawBoard(board, view->squareControls);
 		//if the make move button is not used then instantly make the next move
@@ -151,91 +172,6 @@ namespace tchess
 		}
 	}
 
-	void game::acceptMove() {
-		unsigned int side = info.getSideToMove();
-		std::string playerWhoMoves = side==white ? whitePlayer->description() : blackPlayer->description();
-		//get the next move
-		move m = side == white ? whitePlayer->makeMove(this) : blackPlayer->makeMove(this);
-
-		if(m.isResign()) { //check if player resigned before going any further
-			std::string playerWhoWon = side==white ? blackPlayer->description() : whitePlayer->description();
-			endGame(false, side == white ? black : white, "Resignation");
-			return;
-		}
-		//correct this move if it appears to be a capture (only important for human player)
-		captureFix(side, board, m);
-
-		std::vector<move> pseudoLegalMoves; //generate pseudo legal moves, will be needed at least for move validation
-		move_generator generator(board, info);
-		generator.generatePseudoLegalMoves(side, pseudoLegalMoves);
-
-		int pieceThatMoved = board[m.getFromSquare()]; //will be needed later, if the move is legal (only the type)
-		pieceThatMoved = pieceThatMoved >= 0 ? pieceThatMoved : -pieceThatMoved;
-		move_legality_result result = isValidMove(m, pseudoLegalMoves); //make the move on the board while checking
-
-		if(result.isLegal()) { //move is legal
-			moves.push_back(m); //save this move
-			//update game information, such as castling rights and side to move
-			updateGameInformation(board, m, info);
-			/*
-			 * Check if the game has ended: checkmate, stalemate, repetition, etc.
-			 * For this, all legal moves of the side to move is needed.
-			 * Also need to know is the side to move is in check.
-			 */
-			bool check = isAttacked(board, side, board.getKingSquare(1-side)), checkmate = false, stalemate = false;
-			generator.generatePseudoLegalMoves(1-side, pseudoLegalMoves); //all pseudo legal moves of the side to move
-			unsigned int legalMoveCount = 0;
-			for(const move& plMove: pseudoLegalMoves) {
-				move_legality_result legRes = isValidMove(plMove, pseudoLegalMoves); //this made the move on the board!!!
-				if(legRes.isLegal()) { //found at least 1 legal move, cant be stalemate, checkmate
-					++legalMoveCount;
-					board.unmakeMove(plMove, 1-side, legRes.getCapturedPiece()); //unmake tested move
-					break;
-				}
-				board.unmakeMove(plMove, 1-side, legRes.getCapturedPiece()); //unmake tested move
-			}
-			if(legalMoveCount == 0) { //no legal moves, must be checkmate or stalemate
-				if(check) {
-					checkmate = true;
-				} else {
-					stalemate = true;
-				}
-			}
-			//TODO write moves to UI
-			if(checkmate) {
-				endGame(false, side, "Checkmate");
-				return;
-			} else if(stalemate) {
-				endGame(true, 0, "Stalemate");
-				return;
-			} else if(board.isInsufficientMaterial()) {
-				endGame(true, 0, "Insufficient mating material");
-				return;
-			} else if(check) {
-				//TODO when writing the move to the UI, write it was check
-			}
-		} else { //move is illegal
-			if(result.isPseudoLegal()) {  //unmake the illegal move on the board
-				board.unmakeMove(m, side, result.getCapturedPiece());
-			}
-			--illegalMoveCounter[side];
-			CString illMoveMessage;
-			illMoveMessage.Format(_T("%s has made an illegal move: %s. Reason: %s"), CString(playerWhoMoves.c_str()).GetBuffer(),
-				CString(m.to_string(pieceThatMoved).c_str()).GetBuffer(), CString(result.getInformation().c_str()).GetBuffer());
-			if(illegalMoveCounter[side] > 0) {
-				CString message;
-				message.Format(_T("%s can only make %u more illegal moves before losing!"), CString(playerWhoMoves.c_str()).GetBuffer(), illegalMoveCounter[side]);
-				AfxMessageBox(message, MB_OK | MB_ICONWARNING);
-			} else { //this player made too many illegal moves and loses
-				CString message;
-				message.Format(_T("%s has made too many illegal moves, and lost!"), CString(playerWhoMoves.c_str()).GetBuffer());
-				AfxMessageBox(message, MB_OK | MB_ICONWARNING);
-				endGame(false, side == white ? black : white, "Too many illegal moves!");
-			}
-		}
-	}
-
-	//OVerload where move is received.
 	void game::acceptMove(move m)
 	{
 		unsigned int side = info.getSideToMove();

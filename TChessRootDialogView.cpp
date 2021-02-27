@@ -20,6 +20,8 @@
 
 // TChessRootDialogView
 
+const UINT MOVE_CALCULATED_MESSAGE = RegisterWindowMessage(_T("MOVE_CALCULATED_MESSAGE"));
+
 IMPLEMENT_DYNCREATE(TChessRootDialogView, CFormView)
 
 TChessRootDialogView::TChessRootDialogView()
@@ -62,8 +64,9 @@ void TChessRootDialogView::DoDataExchange(CDataExchange* pDX)
 }
 
 BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
-ON_BN_CLICKED(IDC_START_GAME_BUTTON, &TChessRootDialogView::OnBnClickedStartGameButton)
-ON_BN_CLICKED(IDC_MAKE_MOVE, &TChessRootDialogView::OnBnClickedMakeMove)
+	ON_BN_CLICKED(IDC_START_GAME_BUTTON, &TChessRootDialogView::OnBnClickedStartGameButton)
+	ON_BN_CLICKED(IDC_MAKE_MOVE, &TChessRootDialogView::OnBnClickedMakeMove)
+	ON_REGISTERED_MESSAGE(MOVE_CALCULATED_MESSAGE, &TChessRootDialogView::OnMoveCalculated) 
 END_MESSAGE_MAP()
 
 
@@ -138,6 +141,16 @@ void TChessRootDialogView::OnBnClickedMakeMove()
 {
 	if (gameObject == nullptr) return;
 	if (!gameObject->gameOngoing()) return;
+	//dont do anything if a move calculation is in progress
+	if (gameObject->isAwaitingMove()) return;
 	//tell the game controller to make the next move
 	gameObject->nextMove();
+}
+
+//Called when the move calculator thread finishes. LPARAM is the move pointer
+LRESULT TChessRootDialogView::OnMoveCalculated(WPARAM wp, LPARAM lp)
+{
+	tchess::move* m = reinterpret_cast<tchess::move*>(lp); //cast lp to move pointer
+	gameObject->submitMove(*m); //give move to the controller
+	return LRESULT();
 }

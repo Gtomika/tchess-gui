@@ -53,6 +53,11 @@ namespace tchess
 		*/
 		bool waitWithMoves;
 
+		/*
+		* True if the game controller expects the 'submitMove' method to be called.
+		*/
+		bool awaitingMove;
+
 		/**
 		 * The object that stores the current state of the board.
 		 */
@@ -119,19 +124,18 @@ namespace tchess
 		*/
 		void submitMove(const move& m);
 
+		TChessRootDialogView* getView() {
+			return view;
+		}
+
+		bool isAwaitingMove() {
+			return awaitingMove;
+		}
+
 	private:
 		/*
-		 * This method asks the player agent whose turn it is to move to submit a move.
-		 * This is done by the players 'makeMove' method. Then, it checks if this move
-		 * is legal.
-		 *  - If legal, then updates the game.
-		 *  - If illegal, then asks the player for a new move.
-		 */
-		void acceptMove();
-
-		/*
-		* Overload for gui interactive players. For such players, the 'makeMove' method will not be called, instead they 
-		* use the GUI to select a move, and that is passed to the controller.
+		* Takes a move and checks if it is legal for the side to move. If legal, updates the game. If not, warnings are displayed. 
+		* Checks if the game ended as a result of this move.
 		*/
 		void acceptMove(move m);
 

@@ -18,6 +18,9 @@ namespace tchess
 
 // TChessRootDialogView form view
 
+//The message type that is sent when a move calculation finishes.
+extern const UINT MOVE_CALCULATED_MESSAGE;
+
 class TChessRootDialogView : public CFormView
 {
 	DECLARE_DYNCREATE(TChessRootDialogView)
@@ -49,6 +52,9 @@ private:
 public:
 	afx_msg void OnBnClickedStartGameButton();
 	afx_msg void OnBnClickedMakeMove();
+
+	//Called when the move calculator background thread finished the work
+	afx_msg LRESULT OnMoveCalculated(WPARAM wp, LPARAM lp);
 
 	//Pointer to the game object, or null if no game is ongoing
 	tchess::game* gameObject;
