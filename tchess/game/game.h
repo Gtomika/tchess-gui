@@ -54,9 +54,14 @@ namespace tchess
 		bool waitWithMoves;
 
 		/*
-		* True if the game controller expects the 'submitMove' method to be called.
+		* True if the game controller expects the 'submitMove' method to be called if a player finished move calculation.
 		*/
-		bool awaitingMove;
+		bool awaitingCalculation;
+
+		/*
+		* True if the game controller expects the 'submitMove' method to be called if a player selected a move from the GUI.
+		*/
+		bool awaitingGui;
 
 		/**
 		 * The object that stores the current state of the board.
@@ -124,12 +129,24 @@ namespace tchess
 		*/
 		void submitMove(const move& m);
 
-		TChessRootDialogView* getView() {
+		const TChessRootDialogView* getView() const {
 			return view;
 		}
 
-		bool isAwaitingMove() {
-			return awaitingMove;
+		bool isAwaitingMove() const {
+			return awaitingCalculation;
+		}
+
+		bool isAwaitingGui() const {
+			return awaitingGui;
+		}
+
+		const chessboard& getBoard() const {
+			return board;
+		}
+
+		const game_information& getInfo() const {
+			return info;
 		}
 
 	private:

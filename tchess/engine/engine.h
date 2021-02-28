@@ -10,7 +10,7 @@
 #ifndef SRC_ENGINE_ENGINE_H_
 #define SRC_ENGINE_ENGINE_H_
 
-#define USE_OPENING_BOOK false
+#define USE_OPENING_BOOK true
 
 #include "game/player.h"
 #include "polyglot.h"

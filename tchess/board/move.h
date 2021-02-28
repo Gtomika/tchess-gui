@@ -10,6 +10,8 @@
 #ifndef SRC_BOARD_MOVE_H_
 #define SRC_BOARD_MOVE_H_
 
+#define NO_PROMOTION 'a'
+
 #include <string>
 #include <bitset>
 #include <stdexcept>
@@ -257,15 +259,9 @@ namespace tchess
 	char pieceNameFromCode(int pieceCode);
 
 	/*
-	 * Parses a move string into a move object. This method performs some
-	 * checks in the input, but it does not guarantee that the move is legal.
-	 * Basically this method will accept the move if it can parse it, but it
-	 * is up to the game object to check if the player can actually make this move.
-	 *
-	 * The parsed move may also be "incomplete", because the parser cannot know
-	 * whether the move is a capture or not.
+	 * Make a move from squares and piece types.
 	 */
-	move parse_move(const std::string& moveString, unsigned int side);
+	move parse_move(char pieceCode, unsigned int from, unsigned int to, unsigned int side, char promotionCode);
 }
 
 #endif /* SRC_BOARD_MOVE_H_ */

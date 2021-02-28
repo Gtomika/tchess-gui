@@ -35,6 +35,8 @@ TChessRootDialogView::TChessRootDialogView()
 {
 	gameObject = nullptr;
 	squareControls = std::vector<CPictureCtrl>(NUM_SQUARES);
+	squareFrom = -1;
+	squareTo = -1;
 }
 
 TChessRootDialogView::~TChessRootDialogView()
@@ -74,7 +76,8 @@ void TChessRootDialogView::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
 	ON_BN_CLICKED(IDC_START_GAME_BUTTON, &TChessRootDialogView::OnBnClickedStartGameButton)
 	ON_BN_CLICKED(IDC_MAKE_MOVE, &TChessRootDialogView::OnBnClickedMakeMove)
-	ON_REGISTERED_MESSAGE(MOVE_CALCULATED_MESSAGE, &TChessRootDialogView::OnMoveCalculated)
+	ON_CONTROL_RANGE(BN_CLICKED, IDC_SQUARE_0, IDC_SQUARE_63, &TChessRootDialogView::OnSquareClicked) //register click event on all squares
+	ON_REGISTERED_MESSAGE(MOVE_CALCULATED_MESSAGE, &TChessRootDialogView::OnMoveCalculated) //add message handles functions
 	ON_REGISTERED_MESSAGE(MOVE_GENERATION_PROGRESS, &TChessRootDialogView::OnMoveGenerationProgressed)
 	ON_REGISTERED_MESSAGE(MOVE_GENERATION_RANGE, &TChessRootDialogView::OnMoveGenerationRangeFound)
 END_MESSAGE_MAP()
@@ -185,4 +188,46 @@ LRESULT TChessRootDialogView::OnMoveGenerationRangeFound(WPARAM wp, LPARAM lp)
 	delete bottom;
 	delete top;
 	return LRESULT();
+}
+
+void TChessRootDialogView::OnSquareClicked(UINT squareId)
+{
+	if (gameObject == nullptr) return; //do nothing if game is not ongoing
+	if (!gameObject->isAwaitingGui()) return; //do nothing if it is not a GUI interactive players turn to move
+	//get square controller
+	CStatic* squareControl = (CStatic*)GetDlgItem(squareId);
+	//get the number of the square
+	UINT squareNumber = squareId - IDC_SQUARE_0;
+	if (squareFrom == -1) {
+		//selecting starting square
+		squareFrom = squareNumber;
+	}
+	else {
+		//selecting destination square or cancelling starting square
+		if (squareFrom == squareNumber) {
+			//cancelled
+			squareFrom = -1;
+		}
+		else {
+			//actual destination square selected
+			squareTo = squareNumber;
+			//move selected, try to parse: using move parser for this one
+			try {
+				char pieceCode = tchess::pieceNameFromCode(std::abs(gameObject->getBoard()[squareFrom]));
+				char promCode = NO_PROMOTION;
+				//check if this move is a promotion, if yes, ask a promotion piece with a dialog: TODO
+				tchess::move parsedMove = tchess::parse_move(pieceCode, squareFrom, squareTo, gameObject->getInfo().getSideToMove(), promCode);
+				gameObject->submitMove(parsedMove);
+				squareFrom = -1;
+				squareTo = -1;
+			}
+			catch (tchess::move_parse_exception& e) {
+				//failed to parse
+				squareFrom = -1;
+				squareTo = -1;
+				CString message = CString(e.what());
+				AfxMessageBox(message, MB_OK | MB_ICONERROR);
+			}
+		}
+	}
 }

@@ -66,9 +66,15 @@ public:
 	afx_msg LRESULT OnMoveGenerationProgressed(WPARAM wp, LPARAM lp);
 	//Called when move generation length is determined by the player.
 	afx_msg LRESULT OnMoveGenerationRangeFound(WPARAM wp, LPARAM lp);
+	//Called when a square is clicked. Id of the square is the parameter
+	afx_msg void OnSquareClicked(UINT squareId);
 
 	//Pointer to the game object, or null if no game is ongoing
 	tchess::game* gameObject;
+	//Starting square clicked on the GUI. -1 if none was clicked so far.
+	UINT squareFrom;
+	//Destination square clicked on the GUI -1 if none was clicked so far.
+	UINT squareTo;
 
 	// White player selector combo box
 	CComboBox comboWhiteSelector;

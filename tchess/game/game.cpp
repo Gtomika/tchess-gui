@@ -21,8 +21,8 @@ namespace tchess
 
 	//game class implementation
 
-	game::game(char whiteCode, char blackCode, TChessRootDialogView* view, bool wait) : gameEnded(false), waitWithMoves(wait), awaitingMove(false),
-		illegalMoveCounter{ ALLOWED_ILLEGAL_MOVES, ALLOWED_ILLEGAL_MOVES }, view(view)
+	game::game(char whiteCode, char blackCode, TChessRootDialogView* view, bool wait) : gameEnded(false), waitWithMoves(wait), 
+		awaitingCalculation(false), awaitingGui(false), illegalMoveCounter{ ALLOWED_ILLEGAL_MOVES, ALLOWED_ILLEGAL_MOVES }, view(view)
 	{
 		switch (whiteCode)
 		{
@@ -81,9 +81,9 @@ namespace tchess
 		view->whitePlayerName.SetWindowText(wn);
 		CString bn = blackPlayer->description().c_str();
 		view->blackPlayerName.SetWindowText(bn);
-		//ask for first move (or wait until it is given)
+		//if the make move button is not used or the next player uses the GUI then move can be instantly made
 		bool nextPlayerGuiInteractive = info.getSideToMove() == white ? whitePlayer->isGuiInteractive() : blackPlayer->isGuiInteractive();
-		if (!waitWithMoves && !nextPlayerGuiInteractive) {
+		if (!waitWithMoves || nextPlayerGuiInteractive) {
 			nextMove();
 		}
 	}
@@ -121,8 +121,13 @@ namespace tchess
 				AfxBeginThread(calculateMove, param);
 				view->moveGenerationStatusText.SetWindowText(_T("Move generation ongoing..."));
 				view->moveGenerationProgress.SetPos(0);
+				awaitingCalculation = true; //the controller is now waiting for the move from the GUI or from the background thread
 			}
-			//player uses gui, the 'submitMove' method will be called
+			else {
+				//player uses gui, the 'submitMove' method will be called
+				awaitingGui = true;
+			}
+			
 		}
 		else {
 			//black to move
@@ -132,32 +137,41 @@ namespace tchess
 				AfxBeginThread(calculateMove, param);
 				view->moveGenerationStatusText.SetWindowText(_T("Move generation ongoing..."));
 				view->moveGenerationProgress.SetPos(0);
+				awaitingCalculation = true; //the controller is now waiting for the move from the GUI or from the background thread
+			}
+			else {
+				awaitingGui = true;
 			}
 		}
-		awaitingMove = true; //the controller is now waiting for the move from the GUI or from the background thread
+		
 	}
 
 	void game::submitMove(const move& m)
 	{
-		awaitingMove = false; //move recived
+		awaitingCalculation = false; //move received
+		awaitingGui = false;
 		acceptMove(m);
 		drawBoard(board, view->squareControls);
-		//if the make move button is not used then instantly make the next move
-		if (!waitWithMoves) {
+		//if the make move button is not used or the next player uses the GUI then move can be instantly made
+		bool nextPlayerGuiInteractive = info.getSideToMove() == white ? whitePlayer->isGuiInteractive() : blackPlayer->isGuiInteractive();
+		if (!waitWithMoves || nextPlayerGuiInteractive) {
 			nextMove();
 		}
 	}
 
 	//Specifically for the human player, who does not have to enter if a move is capture or not
 	void captureFix(unsigned int side, const chessboard& board, move& m) {
-		if(m.isEnPassant()) return;
 		int atDest = board[m.getToSquare()];
+		int piece = board[m.getFromSquare()];
+		int fileFrom = m.getFromSquare() % 8;
+		int fileTo = m.getToSquare() % 8;
 		if((side==white && atDest < 0) || (side==black && atDest > 0)) {
 			//appears to be capture
 			if(!m.isPromotion()) {
+				//not a promotion
 				m = move(m.getFromSquare(), m.getToSquare(), capture, 0);
 			} else {
-				//replace promotion with promotion capture
+				//promotion capture, replace promotion with promotion capture
 				unsigned int promTo = m.promotedTo();
 				unsigned int promCapTo;
 				if(promTo == queen) {
@@ -171,7 +185,10 @@ namespace tchess
 				}
 				m = move(m.getFromSquare(), m.getToSquare(), promCapTo, 0);
 			}
-
+		}
+		else if ((piece == -1 || piece == 1) && atDest == 0 && fileFrom != fileTo) {
+			//appears to be en passant: pawn move to empty square CHANGING files
+			m = move(m.getFromSquare(), m.getToSquare(), enPassantCapture, 0);
 		}
 	}
 
