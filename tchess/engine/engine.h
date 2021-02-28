@@ -10,7 +10,7 @@
 #ifndef SRC_ENGINE_ENGINE_H_
 #define SRC_ENGINE_ENGINE_H_
 
-#define USE_OPENING_BOOK true
+#define USE_OPENING_BOOK false
 
 #include "game/player.h"
 #include "polyglot.h"
@@ -52,8 +52,8 @@ namespace tchess
 	public:
 		engine() = delete;
 
-		engine(unsigned int side, unsigned int depth = default_depth)
-			: player(side, false), depth(depth), opening(USE_OPENING_BOOK) {
+		engine(unsigned int side, TChessRootDialogView* view, unsigned int depth = default_depth)
+			: player(side, false, view), depth(depth), opening(USE_OPENING_BOOK) {
 			ttable = new transposition_table(def_transposition_table_size);
 		}
 

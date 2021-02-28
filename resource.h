@@ -98,6 +98,10 @@
 #define IDC_TURN_TO_MOVE                1074
 #define IDC_GAME_RESULT                 1075
 #define IDC_GAME_REASON                 1076
+#define IDC_MOVE_GENERATION_PROGRESS    1077
+#define IDC_MOVE_GENERATION_STATUS      1078
+#define IDC_BUTTON2                     1079
+#define IDC_RESIGN_BUTTON               1079
 #define ID_PLAY_STARTNEWGAME            32771
 #define ID_SETTINGS_ENGINEDIFFICULTY    32772
 #define ID_ENGINEDIFFICULTY_DEPTH2      32773
@@ -120,7 +124,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        313
 #define _APS_NEXT_COMMAND_VALUE         32786
-#define _APS_NEXT_CONTROL_VALUE         1077
+#define _APS_NEXT_CONTROL_VALUE         1080
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

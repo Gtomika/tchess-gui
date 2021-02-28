@@ -9,12 +9,9 @@ namespace tchess {
 	*/
 	class human_player_gui : public player {
 
-		//A pointer to the view that is used to enter the moves.
-		const TChessRootDialogView* dialogRef;
-
 	public:
 
-		human_player_gui(unsigned int side, const TChessRootDialogView* dr) : player(side, true), dialogRef(dr) {}
+		human_player_gui(unsigned int side, TChessRootDialogView* dr) : player(side, true, dr) {}
 
 		/*
 		 * Waits until the user clicks 2 squares, then attempts to generate a move from those squares.

@@ -4,6 +4,7 @@
 #define TCHESS_ROOT_DIALOG_VIEW_H_
 
 #include <afxext.h>
+#include <afxcmn.h>
 
 #include <vector>
 
@@ -20,6 +21,12 @@ namespace tchess
 
 //The message type that is sent when a move calculation finishes.
 extern const UINT MOVE_CALCULATED_MESSAGE;
+
+//The message type that is sent when a player agent determines how long it needs to calculate a move.
+extern const UINT MOVE_GENERATION_RANGE;
+
+//The message type that is sent when move calculation progresses.
+extern const UINT MOVE_GENERATION_PROGRESS;
 
 class TChessRootDialogView : public CFormView
 {
@@ -55,6 +62,10 @@ public:
 
 	//Called when the move calculator background thread finished the work
 	afx_msg LRESULT OnMoveCalculated(WPARAM wp, LPARAM lp);
+	//Called when move generation progresses.
+	afx_msg LRESULT OnMoveGenerationProgressed(WPARAM wp, LPARAM lp);
+	//Called when move generation length is determined by the player.
+	afx_msg LRESULT OnMoveGenerationRangeFound(WPARAM wp, LPARAM lp);
 
 	//Pointer to the game object, or null if no game is ongoing
 	tchess::game* gameObject;
@@ -81,7 +92,10 @@ public:
 	CButton useMakeMoveCheckbox;
 	// Control variable for the make move button.
 	CButton makeMoveButton;
-	
+	// Control variable for the move generation status text.
+	CStatic moveGenerationStatusText;
+	// Control variable for the move generation progress.
+	CProgressCtrl moveGenerationProgress;
 };
 
 #endif

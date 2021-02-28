@@ -22,6 +22,12 @@
 
 const UINT MOVE_CALCULATED_MESSAGE = RegisterWindowMessage(_T("MOVE_CALCULATED_MESSAGE"));
 
+//The message type that is sent when a player agent determines how long it needs to calculate a move.
+const UINT MOVE_GENERATION_RANGE = RegisterWindowMessage(_T("MOVE_GENERATION_RANGE"));
+
+//The message type that is sent when move calculation progresses.
+const UINT MOVE_GENERATION_PROGRESS = RegisterWindowMessage(_T("MOVE_GENERATION_PROGRESS"));
+
 IMPLEMENT_DYNCREATE(TChessRootDialogView, CFormView)
 
 TChessRootDialogView::TChessRootDialogView()
@@ -61,12 +67,16 @@ void TChessRootDialogView::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_GAME_REASON, gameResultReason);
 	DDX_Control(pDX, IDC_USE_MAKE_MOVE_BUTTON, useMakeMoveCheckbox);
 	DDX_Control(pDX, IDC_MAKE_MOVE, makeMoveButton);
+	DDX_Control(pDX, IDC_MOVE_GENERATION_STATUS, moveGenerationStatusText);
+	DDX_Control(pDX, IDC_MOVE_GENERATION_PROGRESS, moveGenerationProgress);
 }
 
 BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
 	ON_BN_CLICKED(IDC_START_GAME_BUTTON, &TChessRootDialogView::OnBnClickedStartGameButton)
 	ON_BN_CLICKED(IDC_MAKE_MOVE, &TChessRootDialogView::OnBnClickedMakeMove)
-	ON_REGISTERED_MESSAGE(MOVE_CALCULATED_MESSAGE, &TChessRootDialogView::OnMoveCalculated) 
+	ON_REGISTERED_MESSAGE(MOVE_CALCULATED_MESSAGE, &TChessRootDialogView::OnMoveCalculated)
+	ON_REGISTERED_MESSAGE(MOVE_GENERATION_PROGRESS, &TChessRootDialogView::OnMoveGenerationProgressed)
+	ON_REGISTERED_MESSAGE(MOVE_GENERATION_RANGE, &TChessRootDialogView::OnMoveGenerationRangeFound)
 END_MESSAGE_MAP()
 
 
@@ -150,7 +160,29 @@ void TChessRootDialogView::OnBnClickedMakeMove()
 //Called when the move calculator thread finishes. LPARAM is the move pointer
 LRESULT TChessRootDialogView::OnMoveCalculated(WPARAM wp, LPARAM lp)
 {
+	moveGenerationStatusText.SetWindowText(_T("Moves generation not in progress"));
 	tchess::move* m = reinterpret_cast<tchess::move*>(lp); //cast lp to move pointer
 	gameObject->submitMove(*m); //give move to the controller
+	delete m;
+	return LRESULT();
+}
+
+//Called when move generation is progressed. LPARAM is the new progress amount.
+LRESULT TChessRootDialogView::OnMoveGenerationProgressed(WPARAM wp, LPARAM lp)
+{
+	short* progress = reinterpret_cast<short*>(lp);
+	moveGenerationProgress.SetPos(*progress);
+	delete progress;
+	return LRESULT();
+}
+
+//Called when move generation length is determined by the player. WPARAM is range bottom, LPARAM is range top.
+LRESULT TChessRootDialogView::OnMoveGenerationRangeFound(WPARAM wp, LPARAM lp)
+{
+	short* bottom = reinterpret_cast<short*>(wp);
+	short* top = reinterpret_cast<short*>(lp);
+	moveGenerationProgress.SetRange(*bottom, *top);
+	delete bottom;
+	delete top;
 	return LRESULT();
 }

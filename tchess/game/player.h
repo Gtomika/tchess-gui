@@ -11,8 +11,12 @@
 #include <stdexcept>
 #include <string>
 
+#include "TChessRootDialogView.h"
+
 #include "game.h"
 #include "board/move.h"
+
+class TChessRootDialogView;
 
 namespace tchess
 {
@@ -33,8 +37,11 @@ namespace tchess
 		//If the agent uses GUI to make its move
 		bool usesGui;
 
+		//Pointer to the GUI
+		TChessRootDialogView* view;
+
 	public:
-		player(unsigned int side, bool useGui) : side(side), usesGui(useGui) {}
+		player(unsigned int side, bool useGui, TChessRootDialogView* v) : side(side), usesGui(useGui), view(v) {}
 
 		virtual ~player() {}
 

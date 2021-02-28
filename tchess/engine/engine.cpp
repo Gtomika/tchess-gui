@@ -25,6 +25,12 @@ namespace tchess
 		generator.generatePseudoLegalMoves(side, moves);
 		auto legalCheck = [&](const move& m) { return !(isLegalMove(m, board, info)); };
 		auto legalEnd = std::remove_if(moves.begin(), moves.end(), legalCheck);
+
+		//got moves, post message to set progress bar range
+		short* bottom = new short(0);
+		short* top = new short(moves.size());
+		PostMessage(view->GetSafeHwnd(), MOVE_GENERATION_RANGE, reinterpret_cast<WPARAM>(bottom), reinterpret_cast<LPARAM>(top));
+
 		//order moves
 		std::sort(moves.begin(), moves.end(), std::greater<move>());
 		//we cant be at maximum depth, since this is the root call
@@ -34,9 +40,6 @@ namespace tchess
 		for(auto it = moves.begin(); it != legalEnd; it++) { //iterate legal moves
 			move& _move = *it;
 			int p = std::abs(board[_move.getFromSquare()]);
-			//this is not working in eclipse console but does in normal console!
-			std::cout << "\rAnalyzing " << ++count << ". move out of " << moves.size()
-								<< ", move: " << _move.to_string(p) << "           "; //<- to delete whole line
 			int capturedPiece = board.makeMove(_move, side);
 			game_information infoAfterMove = info; //create a game info object
 			updateGameInformation(board, _move, infoAfterMove); //update new info object with move
@@ -46,11 +49,13 @@ namespace tchess
 				bestEvaluation = evaluation;
 				bestMove = _move;
 			}
+			//finished with this move, post progress message
+			++count;
+			int* pCount = new int(count);
+			PostMessage(view->GetSafeHwnd(), MOVE_GENERATION_PROGRESS, 0, reinterpret_cast<LPARAM>(pCount));
 		}
 		std::cout << std::endl;
 		ttable->invalidateEntries();
-		//ttable->printDebug();
-		printPrincipalVariation(board, info, depth);
 		return bestMove;
 	}
 

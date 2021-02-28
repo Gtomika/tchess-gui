@@ -30,13 +30,13 @@ namespace tchess
 			whitePlayer = new human_player_gui(white, view);
 			break;
 		case randomPlayerCode:
-			whitePlayer = new random_player(white);
+			whitePlayer = new random_player(white, view);
 			break;
 		case greedyPlayerCode:
-			whitePlayer = new greedy_player(white);
+			whitePlayer = new greedy_player(white, view);
 			break;
 		case engineCode:
-			whitePlayer = new engine(white);
+			whitePlayer = new engine(white, view);
 			break;
 		default:
 			throw std::runtime_error("Invalid player code: " + whiteCode);
@@ -49,13 +49,13 @@ namespace tchess
 			blackPlayer = new human_player_gui(black, view);
 			break;
 		case randomPlayerCode:
-			blackPlayer = new random_player(black);
+			blackPlayer = new random_player(black, view);
 			break;
 		case greedyPlayerCode:
-			blackPlayer = new greedy_player(black);
+			blackPlayer = new greedy_player(black, view);
 			break;
 		case engineCode:
-			blackPlayer = new engine(black);
+			blackPlayer = new engine(black, view);
 			break;
 		default:
 			throw std::runtime_error("Invalid player code: " + blackCode);
@@ -105,8 +105,7 @@ namespace tchess
 		//allocate a move object
 		move* movePointer = new move(m);
 		//post message with the calculated move
-		LPARAM lpMove = reinterpret_cast<LPARAM>(movePointer);
-		PostMessage(tp->gameController->getView()->GetSafeHwnd(), MOVE_CALCULATED_MESSAGE, 0, lpMove);
+		PostMessage(tp->gameController->getView()->GetSafeHwnd(), MOVE_CALCULATED_MESSAGE, 0, reinterpret_cast<LPARAM>(movePointer));
 		//free memory, return sucess
 		delete param;
 		return 0;
@@ -120,6 +119,8 @@ namespace tchess
 				//launch thread that calculates the move
 				thread_param* param = new thread_param(whitePlayer, this);
 				AfxBeginThread(calculateMove, param);
+				view->moveGenerationStatusText.SetWindowText(_T("Move generation ongoing..."));
+				view->moveGenerationProgress.SetPos(0);
 			}
 			//player uses gui, the 'submitMove' method will be called
 		}
@@ -129,6 +130,8 @@ namespace tchess
 				//launch thread that calculates the move
 				thread_param* param = new thread_param(blackPlayer, this);
 				AfxBeginThread(calculateMove, param);
+				view->moveGenerationStatusText.SetWindowText(_T("Move generation ongoing..."));
+				view->moveGenerationProgress.SetPos(0);
 			}
 		}
 		awaitingMove = true; //the controller is now waiting for the move from the GUI or from the background thread

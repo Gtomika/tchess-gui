@@ -30,7 +30,7 @@ namespace tchess
 	public:
 		random_player() = delete;
 
-		random_player(unsigned int side) : player(side, false) {}
+		random_player(unsigned int side, TChessRootDialogView* view) : player(side, false, view) {}
 
 		/*
 		 * Will submit one randomly selected legal move.

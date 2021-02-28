@@ -20,6 +20,8 @@ downloads, so you don't have to build it.
 This is a *Visual Studio* project, and should be imported 
 and built there.
 
+**Build variant:** Build the *Release* version, because the engine in the *Debug* version is VERY slow.
+
 **Boost:** This project uses Boost library, so to get a succesful 
 build you
  - must have Boost headers on your computer.

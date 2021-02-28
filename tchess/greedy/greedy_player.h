@@ -30,7 +30,7 @@ namespace tchess
 	public:
 		greedy_player() = delete;
 
-		greedy_player(unsigned int side) : player(side, false) {}
+		greedy_player(unsigned int side, TChessRootDialogView* view) : player(side, false, view) {}
 
 		/*
 		 * Will submit the best move it can find after evaluating the
