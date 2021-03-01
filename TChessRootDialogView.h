@@ -57,9 +57,10 @@ private:
 	char playerFromText(const CString& text);
 
 public:
+	//Called when the start game button is clicked.
 	afx_msg void OnBnClickedStartGameButton();
+	//Called when the make move button is clicked.
 	afx_msg void OnBnClickedMakeMove();
-
 	//Called when the move calculator background thread finished the work
 	afx_msg LRESULT OnMoveCalculated(WPARAM wp, LPARAM lp);
 	//Called when move generation progresses.
@@ -68,6 +69,8 @@ public:
 	afx_msg LRESULT OnMoveGenerationRangeFound(WPARAM wp, LPARAM lp);
 	//Called when a square is clicked. Id of the square is the parameter
 	afx_msg void OnSquareClicked(UINT squareId);
+	//Called when the resign button is clicked.
+	afx_msg void OnBnClickedResignButton();
 
 	//Pointer to the game object, or null if no game is ongoing
 	tchess::game* gameObject;
@@ -102,6 +105,9 @@ public:
 	CStatic moveGenerationStatusText;
 	// Control variable for the move generation progress.
 	CProgressCtrl moveGenerationProgress;
+	
+	// Control variable for the resign button.
+	CButton resignButton;
 };
 
 #endif

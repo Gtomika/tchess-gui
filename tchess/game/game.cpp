@@ -81,6 +81,11 @@ namespace tchess
 		view->whitePlayerName.SetWindowText(wn);
 		CString bn = blackPlayer->description().c_str();
 		view->blackPlayerName.SetWindowText(bn);
+		CString turnToMove(_T("WHITE's turn to move"));
+		view->turnToMove.SetWindowText(turnToMove);
+		if (whitePlayer->isGuiInteractive() || blackPlayer->isGuiInteractive()) {
+			view->resignButton.EnableWindow(true); //enable resign button if one player can use it.
+		}
 		//if the make move button is not used or the next player uses the GUI then move can be instantly made
 		bool nextPlayerGuiInteractive = info.getSideToMove() == white ? whitePlayer->isGuiInteractive() : blackPlayer->isGuiInteractive();
 		if (!waitWithMoves || nextPlayerGuiInteractive) {
@@ -258,6 +263,9 @@ namespace tchess
 			else if (check) {
 				//TODO when writing the move to the UI, write it was check
 			}
+			//it is the next players turn to move
+			CString turnToMove(side == white ? _T("BLACK's turn to move") : _T("WHITE's turn to move"));
+			view->turnToMove.SetWindowText(turnToMove);
 		}
 		else { //move is illegal
 			if (result.isPseudoLegal()) {  //unmake the illegal move on the board
@@ -358,6 +366,12 @@ namespace tchess
 		//update reason
 		CString cMessage = message.c_str();
 		view->gameResultReason.SetWindowText(cMessage);
+		//hide turn to move
+		CString empty(_T(""));
+		view->turnToMove.SetWindowText(empty);
+		//disable buttons that  should only be used during a game
+		view->makeMoveButton.EnableWindow(false);
+		view->resignButton.EnableWindow(false);
 	}
 }
 

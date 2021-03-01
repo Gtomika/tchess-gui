@@ -10,7 +10,7 @@
 
 #include "image_utils.h"
 #include "board/board.h"
-
+#include "board/move.h"
 #include "engine/engine.h"
 #include "greedy/greedy_player.h"
 #include "random/random_player.h"
@@ -71,6 +71,7 @@ void TChessRootDialogView::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MAKE_MOVE, makeMoveButton);
 	DDX_Control(pDX, IDC_MOVE_GENERATION_STATUS, moveGenerationStatusText);
 	DDX_Control(pDX, IDC_MOVE_GENERATION_PROGRESS, moveGenerationProgress);
+	DDX_Control(pDX, IDC_RESIGN_BUTTON, resignButton);
 }
 
 BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
@@ -80,6 +81,7 @@ BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
 	ON_REGISTERED_MESSAGE(MOVE_CALCULATED_MESSAGE, &TChessRootDialogView::OnMoveCalculated) //add message handles functions
 	ON_REGISTERED_MESSAGE(MOVE_GENERATION_PROGRESS, &TChessRootDialogView::OnMoveGenerationProgressed)
 	ON_REGISTERED_MESSAGE(MOVE_GENERATION_RANGE, &TChessRootDialogView::OnMoveGenerationRangeFound)
+	ON_BN_CLICKED(IDC_RESIGN_BUTTON, &TChessRootDialogView::OnBnClickedResignButton)
 END_MESSAGE_MAP()
 
 
@@ -193,6 +195,7 @@ LRESULT TChessRootDialogView::OnMoveGenerationRangeFound(WPARAM wp, LPARAM lp)
 void TChessRootDialogView::OnSquareClicked(UINT squareId)
 {
 	if (gameObject == nullptr) return; //do nothing if game is not ongoing
+	if (!gameObject->gameOngoing()) return;
 	if (!gameObject->isAwaitingGui()) return; //do nothing if it is not a GUI interactive players turn to move
 	//get square controller
 	CStatic* squareControl = (CStatic*)GetDlgItem(squareId);
@@ -229,5 +232,19 @@ void TChessRootDialogView::OnSquareClicked(UINT squareId)
 				AfxMessageBox(message, MB_OK | MB_ICONERROR);
 			}
 		}
+	}
+}
+
+void TChessRootDialogView::OnBnClickedResignButton()
+{
+	if (gameObject == nullptr) return; //do nothing if game is not ongoing
+	if (!gameObject->gameOngoing()) return;
+	if (!gameObject->isAwaitingGui()) return; //do nothing if it is not a GUI interactive players turn to move
+	//ask for confirmation
+	int decision = AfxMessageBox(_T("Are you sure you want to resign?"), MB_YESNO | MB_ICONQUESTION);
+	if (decision == IDYES) {
+		//submit a resign move
+		tchess::move resignMove = tchess::move(0, 0, tchess::resignMove, 0);
+		gameObject->submitMove(resignMove);
 	}
 }
