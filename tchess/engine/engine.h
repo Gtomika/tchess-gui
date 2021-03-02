@@ -20,9 +20,9 @@
 namespace tchess
 {
 	/*
-	 * Default tree search depth.
+	 * Tree search depth used by the engine.
 	 */
-	extern const unsigned int default_depth;
+	extern unsigned int engine_depth;
 
 	/*
 	 * Player agent for the Tchess engine.
@@ -52,7 +52,7 @@ namespace tchess
 	public:
 		engine() = delete;
 
-		engine(unsigned int side, TChessRootDialogView* view, unsigned int depth = default_depth)
+		engine(unsigned int side, TChessRootDialogView* view, unsigned int depth = engine_depth)
 			: player(side, false, view), depth(depth), opening(USE_OPENING_BOOK) {
 			ttable = new transposition_table(def_transposition_table_size);
 		}

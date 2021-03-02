@@ -13,22 +13,11 @@
 #include "TChessGUIView.h"
 #include "TChessRootDialogView.h"
 
+#include "engine/engine.h"
+
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
-
-
-// CTChessGUIApp
-
-BEGIN_MESSAGE_MAP(CTChessGUIApp, CWinApp)
-	ON_COMMAND(ID_APP_ABOUT, &CTChessGUIApp::OnAppAbout)
-	// Standard file based document commands
-	ON_COMMAND(ID_FILE_NEW, &CWinApp::OnFileNew)
-	ON_COMMAND(ID_FILE_OPEN, &CWinApp::OnFileOpen)
-	// Standard print setup command
-	ON_COMMAND(ID_FILE_PRINT_SETUP, &CWinApp::OnFilePrintSetup)
-END_MESSAGE_MAP()
-
 
 // CTChessGUIApp construction
 
@@ -94,7 +83,7 @@ BOOL CTChessGUIApp::InitInstance()
 	// Change the registry key under which our settings are stored
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
+	SetRegistryKey(_T("TChess GUI Application"));
 	LoadStdProfileSettings(4);  // Load standard INI file options (including MRU)
 
 
@@ -139,47 +128,35 @@ int CTChessGUIApp::ExitInstance()
 
 // CTChessGUIApp message handlers
 
-
-// CAboutDlg dialog used for App About
-
-class CAboutDlg : public CDialogEx
-{
-public:
-	CAboutDlg() noexcept;
-
-// Dialog Data
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_ABOUTBOX };
-#endif
-
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
-
-// Implementation
-protected:
-	DECLARE_MESSAGE_MAP()
-};
-
-CAboutDlg::CAboutDlg() noexcept : CDialogEx(IDD_ABOUTBOX)
-{
-}
-
-void CAboutDlg::DoDataExchange(CDataExchange* pDX)
-{
-	CDialogEx::DoDataExchange(pDX);
-}
-
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CTChessGUIApp, CWinApp)
+	ON_COMMAND(ID_SOURCE_VIEWCODEONGITHUB, &CTChessGUIApp::OnSourceViewCodeOnGithub)
+	ON_COMMAND(ID_SOURCE_VIEWCONSOLEVERSIONONGITHUB, &CTChessGUIApp::OnSourceViewConsoleVersionOnGithub)
+	ON_COMMAND(ID_HELP_HOWTOSTARTAGAME, &CTChessGUIApp::OnHelpHowToStartGame)
+	ON_COMMAND(ID_HELP_HOWTOMAKEAMOVE, &CTChessGUIApp::OnHelpHowToMakeMove)
 END_MESSAGE_MAP()
-
-// App command to run the dialog
-void CTChessGUIApp::OnAppAbout()
-{
-	CAboutDlg aboutDlg;
-	aboutDlg.DoModal();
-}
 
 // CTChessGUIApp message handlers
 
+void CTChessGUIApp::OnSourceViewCodeOnGithub()
+{
+	ShellExecute(0, 0, _T("https://github.com/Gtomika/tchess-gui"), 0, 0, SW_SHOW);
+}
 
 
+void CTChessGUIApp::OnSourceViewConsoleVersionOnGithub()
+{
+	ShellExecute(0, 0, _T("https://github.com/Gtomika/tchess"), 0, 0, SW_SHOW);
+}
+
+
+void CTChessGUIApp::OnHelpHowToStartGame()
+{
+	AfxMessageBox(_T("Select two players on the left, then click start game."), MB_OK | MB_ICONINFORMATION);
+}
+
+
+void CTChessGUIApp::OnHelpHowToMakeMove()
+{
+	AfxMessageBox(_T("When it's your turn to move, click on the piece you want to move, \
+		then on the square you wish to move it. If you changed your mind, click in the piece again to cancel moving that."), MB_OK | MB_ICONINFORMATION);
+}

@@ -15,7 +15,7 @@
 
 namespace tchess
 {
-	const unsigned int default_depth = 6;
+	unsigned int engine_depth = 6;
 
 	move engine::alphaBetaNegamaxRoot() {
 		unsigned int side = info.getSideToMove();

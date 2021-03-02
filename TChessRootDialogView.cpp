@@ -48,6 +48,9 @@ void TChessRootDialogView::OnInitialUpdate()
 	CFormView::OnInitialUpdate();
 	//initialize all views here
 
+	//set engine difficulty radio button
+	radioDiff6.SetCheck(true);
+
 	//draw a starter board so squares are not completely empty
 	tchess::chessboard starterBoard;
 	tchess::drawBoard(starterBoard, squareControls);
@@ -72,6 +75,11 @@ void TChessRootDialogView::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MOVE_GENERATION_STATUS, moveGenerationStatusText);
 	DDX_Control(pDX, IDC_MOVE_GENERATION_PROGRESS, moveGenerationProgress);
 	DDX_Control(pDX, IDC_RESIGN_BUTTON, resignButton);
+	DDX_Control(pDX, IDC_DIFFICULTY_2, radioDiff2);
+	DDX_Control(pDX, IDC_DEFFICULTY_3, radioDiff3);
+	DDX_Control(pDX, IDC_DIFFICULTY_4, radioDiff4);
+	DDX_Control(pDX, IDC_DIFFICULTY_5, radioDiff5);
+	DDX_Control(pDX, IDC_DIFFICULTY_6, radioDiff6);
 }
 
 BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
@@ -82,6 +90,11 @@ BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
 	ON_REGISTERED_MESSAGE(MOVE_GENERATION_PROGRESS, &TChessRootDialogView::OnMoveGenerationProgressed)
 	ON_REGISTERED_MESSAGE(MOVE_GENERATION_RANGE, &TChessRootDialogView::OnMoveGenerationRangeFound)
 	ON_BN_CLICKED(IDC_RESIGN_BUTTON, &TChessRootDialogView::OnBnClickedResignButton)
+	ON_BN_CLICKED(IDC_DIFFICULTY_2, &TChessRootDialogView::OnBnClickedDifficulty2)
+	ON_BN_CLICKED(IDC_DEFFICULTY_3, &TChessRootDialogView::OnBnClickedDefficulty3)
+	ON_BN_CLICKED(IDC_DIFFICULTY_4, &TChessRootDialogView::OnBnClickedDifficulty4)
+	ON_BN_CLICKED(IDC_DIFFICULTY_5, &TChessRootDialogView::OnBnClickedDifficulty5)
+	ON_BN_CLICKED(IDC_DIFFICULTY_6, &TChessRootDialogView::OnBnClickedDifficulty6)
 END_MESSAGE_MAP()
 
 
@@ -247,4 +260,34 @@ void TChessRootDialogView::OnBnClickedResignButton()
 		tchess::move resignMove = tchess::move(0, 0, tchess::resignMove, 0);
 		gameObject->submitMove(resignMove);
 	}
+}
+
+
+void TChessRootDialogView::OnBnClickedDifficulty2()
+{
+	tchess::engine_depth = 2;
+}
+
+
+void TChessRootDialogView::OnBnClickedDefficulty3()
+{
+	tchess::engine_depth = 3;
+}
+
+
+void TChessRootDialogView::OnBnClickedDifficulty4()
+{
+	tchess::engine_depth = 4;
+}
+
+
+void TChessRootDialogView::OnBnClickedDifficulty5()
+{
+	tchess::engine_depth = 5;
+}
+
+
+void TChessRootDialogView::OnBnClickedDifficulty6()
+{
+	tchess::engine_depth = 6;
 }

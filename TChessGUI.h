@@ -27,8 +27,12 @@ public:
 
 // Implementation
 	UINT  m_nAppLook;
-	afx_msg void OnAppAbout();
 	DECLARE_MESSAGE_MAP()
+
+	afx_msg void OnSourceViewCodeOnGithub();
+	afx_msg void OnSourceViewConsoleVersionOnGithub();
+	afx_msg void OnHelpHowToStartGame();
+	afx_msg void OnHelpHowToMakeMove();
 };
 
 extern CTChessGUIApp theApp;

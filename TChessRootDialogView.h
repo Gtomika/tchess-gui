@@ -71,6 +71,12 @@ public:
 	afx_msg void OnSquareClicked(UINT squareId);
 	//Called when the resign button is clicked.
 	afx_msg void OnBnClickedResignButton();
+	//Engine difficulty radio button event handlers
+	afx_msg void OnBnClickedDifficulty2();
+	afx_msg void OnBnClickedDefficulty3();
+	afx_msg void OnBnClickedDifficulty4();
+	afx_msg void OnBnClickedDifficulty5();
+	afx_msg void OnBnClickedDifficulty6();
 
 	//Pointer to the game object, or null if no game is ongoing
 	tchess::game* gameObject;
@@ -108,6 +114,12 @@ public:
 	
 	// Control variable for the resign button.
 	CButton resignButton;
+	//Controls for engine difficulty radio buttons
+	CButton radioDiff2;
+	CButton radioDiff3;
+	CButton radioDiff4;
+	CButton radioDiff5;
+	CButton radioDiff6;
 };
 
 #endif
