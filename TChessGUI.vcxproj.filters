@@ -84,6 +84,9 @@
     <ClInclude Include="tchess\human\human_player_gui.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TChessPromotionDialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TChessGUI.cpp">
@@ -141,6 +144,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="tchess\human\human_player_gui.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TChessPromotionDialog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

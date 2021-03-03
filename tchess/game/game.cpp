@@ -86,6 +86,13 @@ namespace tchess
 		if (whitePlayer->isGuiInteractive() || blackPlayer->isGuiInteractive()) {
 			view->resignButton.EnableWindow(true); //enable resign button if one player can use it.
 		}
+		//disable engine difficulty setting midgame
+		view->radioDiff2.EnableWindow(false);
+		view->radioDiff3.EnableWindow(false);
+		view->radioDiff4.EnableWindow(false);
+		view->radioDiff5.EnableWindow(false);
+		view->radioDiff6.EnableWindow(false);
+
 		//if the make move button is not used or the next player uses the GUI then move can be instantly made
 		bool nextPlayerGuiInteractive = info.getSideToMove() == white ? whitePlayer->isGuiInteractive() : blackPlayer->isGuiInteractive();
 		if (!waitWithMoves || nextPlayerGuiInteractive) {
@@ -157,10 +164,15 @@ namespace tchess
 		awaitingGui = false;
 		acceptMove(m);
 		drawBoard(board, view->squareControls);
-		//if the make move button is not used or the next player uses the GUI then move can be instantly made
-		bool nextPlayerGuiInteractive = info.getSideToMove() == white ? whitePlayer->isGuiInteractive() : blackPlayer->isGuiInteractive();
-		if (!waitWithMoves || nextPlayerGuiInteractive) {
-			nextMove();
+		if (!gameEnded) {
+			bool nextPlayerGuiInteractive = info.getSideToMove() == white ? whitePlayer->isGuiInteractive() : blackPlayer->isGuiInteractive();
+			if (!nextPlayerGuiInteractive && waitWithMoves) {
+				view->makeMoveButton.EnableWindow(true);
+			}
+			//if the make move button is not used or the next player uses the GUI then move can be instantly made
+			if (!waitWithMoves || nextPlayerGuiInteractive) {
+				nextMove();
+			}
 		}
 	}
 
@@ -248,21 +260,28 @@ namespace tchess
 				}
 			}
 			//TODO write moves to UI
+			std::string appendToMove;
 			if (checkmate) {
+				appendToMove += "#";
+				displayMoveOnGui(pieceThatMoved, appendToMove);
 				endGame(false, side, "Checkmate");
 				return;
 			}
 			else if (stalemate) {
+				displayMoveOnGui(pieceThatMoved, appendToMove);
 				endGame(true, 0, "Stalemate");
 				return;
 			}
 			else if (board.isInsufficientMaterial()) {
+				displayMoveOnGui(pieceThatMoved, appendToMove);
 				endGame(true, 0, "Insufficient mating material");
 				return;
 			}
 			else if (check) {
-				//TODO when writing the move to the UI, write it was check
+				appendToMove += "+";
 			}
+			//display move on the GUI
+			displayMoveOnGui(pieceThatMoved, appendToMove);
 			//it is the next players turn to move
 			CString turnToMove(side == white ? _T("BLACK's turn to move") : _T("WHITE's turn to move"));
 			view->turnToMove.SetWindowText(turnToMove);
@@ -275,6 +294,7 @@ namespace tchess
 			CString illMoveMessage;
 			illMoveMessage.Format(_T("%s has made an illegal move: %s. Reason: %s"), CString(playerWhoMoves.c_str()).GetBuffer(),
 				CString(m.to_string(pieceThatMoved).c_str()).GetBuffer(), CString(result.getInformation().c_str()).GetBuffer());
+			AfxMessageBox(illMoveMessage, MB_OK | MB_ICONERROR);
 			if (illegalMoveCounter[side] > 0) {
 				CString message;
 				message.Format(_T("%s can only make %u more illegal moves before losing!"), CString(playerWhoMoves.c_str()).GetBuffer(), illegalMoveCounter[side]);
@@ -301,7 +321,7 @@ namespace tchess
 	move_legality_result game::isValidMove(const move& playerMove, std::vector<move>& pseudoLegalMoves) {
 		bool legal = false;
 		bool pseudoLegal = false;
-		std::string information;
+		std::string information = "This move is not legal for this side!";
 		int capturedPiece = 0;
 		unsigned int side = info.getSideToMove();
 		unsigned int enemySide = 1 - side;
@@ -372,6 +392,38 @@ namespace tchess
 		//disable buttons that  should only be used during a game
 		view->makeMoveButton.EnableWindow(false);
 		view->resignButton.EnableWindow(false);
+		//enable difficulty change
+		view->radioDiff2.EnableWindow(true);
+		view->radioDiff3.EnableWindow(true);
+		view->radioDiff4.EnableWindow(true);
+		view->radioDiff5.EnableWindow(true);
+		view->radioDiff6.EnableWindow(true);
+	}
+
+	void game::displayMoveOnGui(unsigned int pieceThatMoved, const std::string& appendThis)
+	{
+		//determine who made the last move
+		UINT sideThatMoved = 1 - info.getSideToMove();
+		UINT lastRowIndex = view->moveList.GetItemCount() - 1;
+		if (lastRowIndex < 0) lastRowIndex = 0;
+		move& lastMove = moves[moves.size() - 1];
+		CString moveString;
+		moveString.Format(_T("%s %s"), CString(lastMove.to_string(pieceThatMoved).c_str()).GetBuffer(), CString(appendThis.c_str()).GetBuffer());
+
+		if (sideThatMoved == white) {
+			//white moved, need to insert a new row
+			view->moveList.InsertItem(LVCF_TEXT, lastRowIndex+1, _T(""), 0, 0, 0 ,0);
+			CString  numText;
+			numText.Format(_T("%d"), (moves.size() / 2) + 1);
+			//modify the num column with the number
+			view->moveList.SetItemText(lastRowIndex+1, 0, numText);
+			//modify the white column with move string
+			view->moveList.SetItemText(lastRowIndex+1, 1, moveString);
+		}
+		else {
+			//black moved, need to fill "black" column of the last row
+			view->moveList.SetItemText(lastRowIndex, 2, moveString);
+		}
 	}
 }
 

@@ -197,6 +197,7 @@
     <ClInclude Include="TChessGUI.h" />
     <ClInclude Include="TChessGUIDoc.h" />
     <ClInclude Include="TChessGUIView.h" />
+    <ClInclude Include="TChessPromotionDialog.h" />
     <ClInclude Include="TChessRootDialogView.h" />
     <ClInclude Include="tchess\board\board.h" />
     <ClInclude Include="tchess\board\evaluation.h" />
@@ -224,6 +225,7 @@
     <ClCompile Include="TChessGUI.cpp" />
     <ClCompile Include="TChessGUIDoc.cpp" />
     <ClCompile Include="TChessGUIView.cpp" />
+    <ClCompile Include="TChessPromotionDialog.cpp" />
     <ClCompile Include="TChessRootDialogView.cpp" />
     <ClCompile Include="tchess\board\board.cpp" />
     <ClCompile Include="tchess\board\evaluation.cpp" />

@@ -133,6 +133,7 @@ BEGIN_MESSAGE_MAP(CTChessGUIApp, CWinApp)
 	ON_COMMAND(ID_SOURCE_VIEWCONSOLEVERSIONONGITHUB, &CTChessGUIApp::OnSourceViewConsoleVersionOnGithub)
 	ON_COMMAND(ID_HELP_HOWTOSTARTAGAME, &CTChessGUIApp::OnHelpHowToStartGame)
 	ON_COMMAND(ID_HELP_HOWTOMAKEAMOVE, &CTChessGUIApp::OnHelpHowToMakeMove)
+	ON_COMMAND(ID_HELP_SPECIALMOVES, &CTChessGUIApp::OnHelpSpecialMoves)
 END_MESSAGE_MAP()
 
 // CTChessGUIApp message handlers
@@ -159,4 +160,11 @@ void CTChessGUIApp::OnHelpHowToMakeMove()
 {
 	AfxMessageBox(_T("When it's your turn to move, click on the piece you want to move, \
 		then on the square you wish to move it. If you changed your mind, click in the piece again to cancel moving that."), MB_OK | MB_ICONINFORMATION);
+}
+
+
+void CTChessGUIApp::OnHelpSpecialMoves()
+{
+	AfxMessageBox(_T("To castle, move your king to the square where he will be after castling. To promote, advance the pawn to the end, \
+		and select the promoted piece from the dialog. To capture en passant, move the pawn to the en passant desination square."));
 }

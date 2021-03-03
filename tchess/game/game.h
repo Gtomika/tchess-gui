@@ -169,6 +169,11 @@ namespace tchess
 		 * Called when the game has ended. Updates the UI with results.
 		 */
 		void endGame(bool draw, unsigned int winningSide, const std::string& message);
+
+		/*
+		* Adds tge latest move to the GUI's move list.
+		*/
+		void displayMoveOnGui(unsigned int pieceThatMoved, const std::string& appendThis);
 	};
 }
 

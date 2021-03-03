@@ -21,6 +21,7 @@
 #define ID_VIEW_APPLOOK_OFF_2007_AQUA   218
 #define ID_VIEW_APPLOOK_WINDOWS_7       219
 #define IDD_ROOT_DIALOG_VIEW            310
+#define IDD_PROMOTION                   313
 #define IDC_COMBO_WHITE_SELECT          1000
 #define IDC_COMBO_BLACK_SELECT          1001
 #define IDC_BUTTON1                     1002
@@ -106,8 +107,13 @@
 #define IDC_DEFFICULTY_3                1081
 #define IDC_DIFFICULTY_4                1082
 #define IDC_DIFFICULTY_5                1083
-#define IDC_RADIO5                      1084
 #define IDC_DIFFICULTY_6                1084
+#define IDC_PROM_QUEEN                  1085
+#define IDC_PROM_ROOK                   1086
+#define IDC_PROM_BISHOP                 1088
+#define IDC_PROM_KNIGHT                 1089
+#define IDC_LIST1                       1090
+#define IDC_MOVE_LIST                   1090
 #define ID_PLAY_STARTNEWGAME            32771
 #define ID_SETTINGS_ENGINEDIFFICULTY    32772
 #define ID_ENGINEDIFFICULTY_DEPTH2      32773
@@ -123,14 +129,15 @@
 #define ID_SAVEGAMETOFILE_SAVEFULLGAME  32783
 #define ID_SOURCE_VIEWCODEONGITHUB      32784
 #define ID_SOURCE_VIEWCONSOLEVERSIONONGITHUB 32785
+#define ID_HELP_SPECIALMOVES            32786
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        313
-#define _APS_NEXT_COMMAND_VALUE         32786
-#define _APS_NEXT_CONTROL_VALUE         1085
+#define _APS_NEXT_RESOURCE_VALUE        315
+#define _APS_NEXT_COMMAND_VALUE         32787
+#define _APS_NEXT_CONTROL_VALUE         1091
 #define _APS_NEXT_SYMED_VALUE           311
 #endif
 #endif

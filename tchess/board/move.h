@@ -259,6 +259,11 @@ namespace tchess
 	char pieceNameFromCode(int pieceCode);
 
 	/*
+	* Checks if a move is promotion.
+	*/
+	bool checkForPromotion(const std::string& fromSquareName, const std::string& toSquareName, unsigned int side);
+
+	/*
 	 * Make a move from squares and piece types.
 	 */
 	move parse_move(char pieceCode, unsigned int from, unsigned int to, unsigned int side, char promotionCode);

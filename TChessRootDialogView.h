@@ -120,6 +120,8 @@ public:
 	CButton radioDiff4;
 	CButton radioDiff5;
 	CButton radioDiff6;
+	// Control variable for the list view displaying the moves of the game.
+	CListCtrl moveList;
 };
 
 #endif

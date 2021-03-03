@@ -33,6 +33,7 @@ public:
 	afx_msg void OnSourceViewConsoleVersionOnGithub();
 	afx_msg void OnHelpHowToStartGame();
 	afx_msg void OnHelpHowToMakeMove();
+	afx_msg void OnHelpSpecialMoves();
 };
 
 extern CTChessGUIApp theApp;

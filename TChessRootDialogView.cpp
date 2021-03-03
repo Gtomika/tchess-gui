@@ -6,6 +6,7 @@
 #include "pch.h"
 
 #include "TChessGUI.h"
+#include "TChessPromotionDialog.h"
 #include "TChessRootDialogView.h"
 
 #include "image_utils.h"
@@ -48,6 +49,10 @@ void TChessRootDialogView::OnInitialUpdate()
 	CFormView::OnInitialUpdate();
 	//initialize all views here
 
+	moveList.InsertColumn(0, _T("Num"), LVCFMT_CENTER, 50, 0);
+	moveList.InsertColumn(1, _T("White"), LVCFMT_CENTER, 100, 1);
+	moveList.InsertColumn(2, _T("Black"), LVCFMT_CENTER, 100, 2);
+
 	//set engine difficulty radio button
 	radioDiff6.SetCheck(true);
 
@@ -80,6 +85,7 @@ void TChessRootDialogView::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_DIFFICULTY_4, radioDiff4);
 	DDX_Control(pDX, IDC_DIFFICULTY_5, radioDiff5);
 	DDX_Control(pDX, IDC_DIFFICULTY_6, radioDiff6);
+	DDX_Control(pDX, IDC_MOVE_LIST, moveList);
 }
 
 BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
@@ -158,7 +164,6 @@ void TChessRootDialogView::OnBnClickedStartGameButton()
 	char blackPlayerCode = playerFromText(blackSelected);
 	//check if we should use 'make move' button
 	bool useMakeMove = useMakeMoveCheckbox.GetCheck();
-	makeMoveButton.EnableWindow(useMakeMove); //enable or disable button
 	//create game object
 	gameObject = new tchess::game(whitePlayerCode, blackPlayerCode, this, useMakeMove);
 	gameObject->startGame();
@@ -172,6 +177,7 @@ void TChessRootDialogView::OnBnClickedMakeMove()
 	//dont do anything if a move calculation is in progress
 	if (gameObject->isAwaitingMove()) return;
 	//tell the game controller to make the next move
+	makeMoveButton.EnableWindow(false);
 	gameObject->nextMove();
 }
 
@@ -231,8 +237,16 @@ void TChessRootDialogView::OnSquareClicked(UINT squareId)
 			try {
 				char pieceCode = tchess::pieceNameFromCode(std::abs(gameObject->getBoard()[squareFrom]));
 				char promCode = NO_PROMOTION;
-				//check if this move is a promotion, if yes, ask a promotion piece with a dialog: TODO
+				if (tchess::checkForPromotion(tchess::createSquareName(squareFrom), tchess::createSquareName(squareTo), gameObject->getInfo().getSideToMove())) {
+					//this move is a promotion, ask for a piece code
+					TChessPromotionDialog dialog;
+					dialog.DoModal();
+					//user closed the dialog, update promoted piece
+					promCode = tchess::pieceNameFromCode(dialog.promotedPiece);
+				}
+				//create move object
 				tchess::move parsedMove = tchess::parse_move(pieceCode, squareFrom, squareTo, gameObject->getInfo().getSideToMove(), promCode);
+				//submit move object
 				gameObject->submitMove(parsedMove);
 				squareFrom = -1;
 				squareTo = -1;
