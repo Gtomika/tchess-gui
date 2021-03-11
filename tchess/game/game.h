@@ -33,6 +33,12 @@ namespace tchess
 	extern const char greedyPlayerCode;
 	extern const char engineCode;
 
+	//saved additional information about a move (was it a check, what moved, ...)
+	struct move_extra_info {
+		UINT pieceThatMoved;
+		std::string appendToMove;
+	};
+
 	/*
 	 * This template connects the two player's sides. It maintaints the game board and checks if
 	 * moves submitted are legal. IT also signals the players when it is their turn to move.
@@ -89,6 +95,11 @@ namespace tchess
 		std::vector<move> moves;
 
 		/*
+		* Extra information about the moves is stored here
+		*/
+		std::vector<move_extra_info> moveExtras;
+
+		/*
 		 * Stores how many illegal moves can be submitted by the players before they
 		 * automatically lose the match. By default this is 5.
 		 */
@@ -112,6 +123,10 @@ namespace tchess
 		 * moves.
 		 */
 		const std::vector<move>& getMoves() const;
+
+		const std::vector<move_extra_info>& getMoveExtras() const {
+			return moveExtras;
+		}
 
 		//Checks if game has ended.
 		bool gameOngoing() const;

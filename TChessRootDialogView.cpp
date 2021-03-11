@@ -35,6 +35,7 @@ TChessRootDialogView::TChessRootDialogView()
 	: CFormView(IDD_ROOT_DIALOG_VIEW)
 {
 	gameObject = nullptr;
+	savedGame = nullptr;
 	squareControls = std::vector<CPictureCtrl>(NUM_SQUARES);
 	squareFrom = -1;
 	squareTo = -1;
@@ -101,6 +102,8 @@ BEGIN_MESSAGE_MAP(TChessRootDialogView, CFormView)
 	ON_BN_CLICKED(IDC_DIFFICULTY_4, &TChessRootDialogView::OnBnClickedDifficulty4)
 	ON_BN_CLICKED(IDC_DIFFICULTY_5, &TChessRootDialogView::OnBnClickedDifficulty5)
 	ON_BN_CLICKED(IDC_DIFFICULTY_6, &TChessRootDialogView::OnBnClickedDifficulty6)
+	ON_COMMAND(ID_GAME_SAVEGAMETOFILE, &TChessRootDialogView::OnGameSaveToFile)
+	ON_COMMAND(ID_GAME_LOADGAMEFROMFILE, &TChessRootDialogView::OnGameLoadFromFile)
 END_MESSAGE_MAP()
 
 
@@ -136,6 +139,32 @@ char TChessRootDialogView::playerFromText(const CString& text) {
 	}
 }
 
+void TChessRootDialogView::createSaveGame()
+{
+	CString wpn;
+	whitePlayerName.GetWindowText(wpn);
+	CT2CA convertedWpn(wpn);
+	std::string whitePlayerS(convertedWpn);
+
+	CString bpn;
+	blackPlayerName.GetWindowText(bpn);
+	CT2CA convertedBpn(bpn);
+	std::string blackPlayerS(convertedBpn);
+
+	CString result;
+	gameResult.GetWindowText(result);
+	CT2CA convertedResult(result);
+	std::string resultS(convertedResult);
+
+	CString reason;
+	gameResultReason.GetWindowText(reason);
+	CT2CA convertedReason(reason);
+	std::string reasonS(convertedReason);
+
+	savedGame = new tchess::saved_game(whitePlayerS, blackPlayerS, 
+		resultS, reasonS, gameObject->getMoves(), gameObject->getMoveExtras());
+}
+
 // TChessRootDialogView message handlers
 
 void TChessRootDialogView::OnBnClickedStartGameButton()
@@ -159,6 +188,8 @@ void TChessRootDialogView::OnBnClickedStartGameButton()
 	}
 	//delete old game if there is one
 	if (gameObject != nullptr) delete gameObject;
+	//delete old save
+	if (savedGame != nullptr) delete savedGame;
 	//both players were selected
 	char whitePlayerCode = playerFromText(whiteSelected);
 	char blackPlayerCode = playerFromText(blackSelected);
@@ -304,4 +335,26 @@ void TChessRootDialogView::OnBnClickedDifficulty5()
 void TChessRootDialogView::OnBnClickedDifficulty6()
 {
 	tchess::engine_depth = 6;
+}
+
+
+void TChessRootDialogView::OnGameSaveToFile()
+{
+	if (savedGame == nullptr) {
+		AfxMessageBox(_T("You must have a finished game before you can save!"), MB_OK|MB_ICONINFORMATION);
+		return;
+	}
+	TCHAR szFilters[] = _T("Tchess save files (*.tchess)||");
+	CFileDialog saveDialog(FALSE, _T("tchess"), _T("game"),
+		OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilters);
+	if (saveDialog.DoModal() == IDOK) {
+		//get selected path
+		CString path = saveDialog.GetPathName();
+		savedGame->writeToFile(path);
+	}
+}
+
+void TChessRootDialogView::OnGameLoadFromFile()
+{
+	// TODO: Add your command handler code here
 }

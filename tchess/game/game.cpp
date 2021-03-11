@@ -231,7 +231,6 @@ namespace tchess
 		move_legality_result result = isValidMove(m, pseudoLegalMoves); //make the move on the board while checking
 
 		if (result.isLegal()) { //move is legal
-			moves.push_back(m); //save this move
 			//update game information, such as castling rights and side to move
 			updateGameInformation(board, m, info);
 			/*
@@ -280,6 +279,12 @@ namespace tchess
 			else if (check) {
 				appendToMove += "+";
 			}
+			moves.push_back(m); //save this move
+			//save extra info about move
+			move_extra_info extra;
+			extra.appendToMove = appendToMove;
+			extra.pieceThatMoved = pieceThatMoved;
+			moveExtras.push_back(extra);
 			//display move on the GUI
 			displayMoveOnGui(pieceThatMoved, appendToMove);
 			//it is the next players turn to move
@@ -398,6 +403,9 @@ namespace tchess
 		view->radioDiff4.EnableWindow(true);
 		view->radioDiff5.EnableWindow(true);
 		view->radioDiff6.EnableWindow(true);
+
+		//After game ended and UI is updated, make a save game object
+		view->createSaveGame();
 	}
 
 	void game::displayMoveOnGui(unsigned int pieceThatMoved, const std::string& appendThis)

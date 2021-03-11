@@ -9,12 +9,14 @@
 #include <vector>
 
 #include "game/game.h"
+#include "game/saved_game.h"
 #include "game/player.h"
 #include "PictureCtrl.h"
 
 namespace tchess
 {
 	class game;
+	class saved_game;
 }
 
 // TChessRootDialogView form view
@@ -57,6 +59,8 @@ private:
 	char playerFromText(const CString& text);
 
 public:
+	void createSaveGame();
+
 	//Called when the start game button is clicked.
 	afx_msg void OnBnClickedStartGameButton();
 	//Called when the make move button is clicked.
@@ -80,6 +84,9 @@ public:
 
 	//Pointer to the game object, or null if no game is ongoing
 	tchess::game* gameObject;
+	//Pointer to the saved game, if there is one
+	tchess::saved_game* savedGame;
+
 	//Starting square clicked on the GUI. -1 if none was clicked so far.
 	UINT squareFrom;
 	//Destination square clicked on the GUI -1 if none was clicked so far.
@@ -122,6 +129,8 @@ public:
 	CButton radioDiff6;
 	// Control variable for the list view displaying the moves of the game.
 	CListCtrl moveList;
+	afx_msg void OnGameSaveToFile();
+	afx_msg void OnGameLoadFromFile();
 };
 
 #endif

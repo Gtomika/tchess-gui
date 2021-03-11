@@ -87,6 +87,9 @@
     <ClInclude Include="TChessPromotionDialog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="tchess\game\saved_game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TChessGUI.cpp">
@@ -147,6 +150,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TChessPromotionDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="tchess\game\saved_game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
