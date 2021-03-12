@@ -64,7 +64,23 @@ namespace tchess
 		}
 	}
 
-	game::~game() 
+	game::game(TChessRootDialogView* view, std::vector<move> moves, std::string whiteName, 
+		std::string blackName) : gameEnded(false), waitWithMoves(false), 
+		awaitingCalculation(false), awaitingGui(false), illegalMoveCounter{ ALLOWED_ILLEGAL_MOVES, ALLOWED_ILLEGAL_MOVES }, view(view)
+	{
+		//split the received moves to white and black moves
+		std::vector<move> whiteMoves, blackMoves;
+		bool whiteMove = true;
+		for (size_t i = 0; i < moves.size(); ++i) {
+			whiteMove ? whiteMoves.push_back(moves[i]) : blackMoves.push_back(moves[i]);
+			whiteMove = !whiteMove;
+		}
+		//in this case controller is replaying a game from a save file
+		whitePlayer = new saved_game_player(white, whiteMoves, whiteName);
+		blackPlayer = new saved_game_player(black, blackMoves, blackName);
+	}
+
+	game::~game()
 	{
 		delete whitePlayer;
 		delete blackPlayer;

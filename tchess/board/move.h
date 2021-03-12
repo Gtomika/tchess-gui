@@ -266,7 +266,14 @@ namespace tchess
 	/*
 	 * Make a move from squares and piece types.
 	 */
-	move parse_move(char pieceCode, unsigned int from, unsigned int to, unsigned int side, char promotionCode);
+	move parse_move(char pieceCode, unsigned int from, unsigned int to, 
+		unsigned int side, char promotionCode);
+
+	/*
+	* Parse a move from a move string, previously created by move.to_string()
+	* Result may not be complete (for example missing capture flag).
+	*/
+	move parse_move(const std::string& moveString, unsigned int side);
 }
 
 #endif /* SRC_BOARD_MOVE_H_ */

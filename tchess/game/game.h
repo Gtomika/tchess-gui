@@ -111,10 +111,16 @@ namespace tchess
 	public:
 		game() = delete;
 
-		/**
+		/*
 		 * Create the game controller object.
 		 */
 		game(char whiteCode, char blackCode, TChessRootDialogView* view, bool wait);
+
+		/*
+		* For game controller created from a save file.
+		*/
+		game(TChessRootDialogView* view, std::vector<move> moves, std::string whiteName,
+			std::string blackName);
 
 		~game();
 

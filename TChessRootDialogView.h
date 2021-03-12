@@ -9,7 +9,6 @@
 #include <vector>
 
 #include "game/game.h"
-#include "game/saved_game.h"
 #include "game/player.h"
 #include "PictureCtrl.h"
 

@@ -356,5 +356,29 @@ void TChessRootDialogView::OnGameSaveToFile()
 
 void TChessRootDialogView::OnGameLoadFromFile()
 {
-	// TODO: Add your command handler code here
+	if (gameObject != nullptr) {
+		int res = AfxMessageBox(_T("If you load a game now, the current one will be lost! You can save it before loading. Are you sure you want to continue?"),
+			MB_YESNO | MB_ICONWARNING);
+		if (res != IDYES) return;
+	}
+	TCHAR szFilters[] = _T("Tchess save files (*.tchess)||");
+	CFileDialog loadDialog(TRUE, _T("tchess"), NULL,
+		OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST, szFilters);
+	if (loadDialog.DoModal() == IDOK) {
+		//get selected path
+		CString path = loadDialog.GetPathName();
+		//build saved game from the file
+		try {
+			tchess::saved_game savedGame = tchess::readSaveFromFile(path);
+			//create new game controller
+			if (gameObject != nullptr) delete gameObject;
+			gameObject = new tchess::game(this, savedGame.getMoves(),
+				savedGame.getWhiteName(), savedGame.getBlackName());
+			//start the game, the controller will play it out
+			gameObject->startGame();
+		}
+		catch (tchess::move_parse_exception&) {
+			AfxMessageBox(_T("This save file is corrupt!"), MB_OK | MB_ICONERROR);
+		}
+	}
 }

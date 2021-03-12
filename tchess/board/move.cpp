@@ -1,4 +1,6 @@
 #include <vector>
+#include <sstream>
+#include <iterator>
 
 #include "move.h"
 #include "board.h"
@@ -168,7 +170,7 @@ namespace tchess
 			moveString += pieceNameFromCode(prom);
 		}
 		if(isEnPassant()) { //indicate en passant
-			moveString += " (e. p.)";
+			moveString += " (ep)";
 		}
 		return moveString;
 	}
@@ -243,6 +245,97 @@ namespace tchess
 			 * It will be fixed in the 'captureFix' method of game controller
 			 */
 			return move(fromSquare, toSquare, moveType, 0);
+		}
+	}
+
+	template <typename Out>
+	void split(const std::string& s, char delim, Out result) {
+		std::istringstream iss(s);
+		std::string item;
+		while (std::getline(iss, item, delim)) {
+			*result++ = item;
+		}
+	}
+
+	std::vector<std::string> split(const std::string& s, char delim) {
+		std::vector<std::string> elems;
+		split(s, delim, std::back_inserter(elems));
+		return elems;
+	}
+
+	move parse_move(const std::string& moveString, unsigned int side) {
+		int fromSquare, toSquare;
+		if (moveString == "o-o") {
+			//get kingside castle squares for KING, depending on side
+			fromSquare = side == white ? 60 : 4;
+			toSquare = side == white ? 62 : 6;
+			return move(fromSquare, toSquare, kingsideCastle, 0);
+		}
+		else if (moveString == "o-o-o") {
+			//get queenside castle squares for KING, depending on side
+			fromSquare = side == white ? 60 : 4;
+			toSquare = side == white ? 58 : 2;
+			return move(fromSquare, toSquare, queensideCastle, 0);
+		}
+		//move is not castle, so there must be piece code, departure and destination squares specified
+		std::vector<std::string> splitMove = split(moveString, ' ');
+		int splitSize = splitMove.size();
+		if (splitSize < 3) {
+			throw move_parse_exception("Not enough move arguments!");
+		}
+		//the first token is the moved piece code
+		std::string p = splitMove[0];
+		if (p != "K" && p != "Q" && p != "P" && p != "R" && p != "N" && p != "B") {
+			throw move_parse_exception("Unrecognized piece code!");
+		}
+		//the second + third argument should be the departure/destination squares
+		try {
+			fromSquare = createSquareNumber(splitMove[1]);
+			toSquare = createSquareNumber(splitMove[2]);
+			//if the move is a promotion
+			if (p == "P" && checkForPromotion(splitMove[1], splitMove[2], side)) {
+				//must have a promotion piece code as well in this case
+				if (splitSize < 4) {
+					throw move_parse_exception("This move appears to be a promotion, but no promotion piece code was found!");
+				}
+				std::string pProm = splitMove[3];
+				unsigned int promMoveType;
+				if (pProm == "Q") {
+					promMoveType = queenPromotion;
+				}
+				else if (pProm == "R") {
+					promMoveType = rookPromotion;
+				}
+				else if (pProm == "N") {
+					promMoveType = knightPromotion;
+				}
+				else if (pProm == "B") {
+					promMoveType = bishopPromotion;
+				}
+				else {
+					throw move_parse_exception("Unrecognized promotion piece code!");
+				}
+				//move is a promotion, with a valid promotion piece code
+				return move(fromSquare, toSquare, promMoveType, 0);
+			}
+			else { //this move does not appear to be a promotion
+				unsigned int moveType = quietMove;
+				if (splitMove[0] == "P" && (toSquare - fromSquare == 16 || toSquare - fromSquare == -16)) {
+					moveType = doublePawnPush;
+				}
+				else if (splitMove[0] == "P" && splitMove.size() == 4 && splitMove[3] == "(ep)") {
+					//appears to be an en passant
+					moveType = enPassantCapture;
+				}
+				/*
+				 * This move may be a capture
+				 * but we have no way of knowing that here, so just using quiet move type.
+				 */
+				return move(fromSquare, toSquare, moveType, 0);
+			}
+		}
+		catch (std::runtime_error&) { //failed to parse square names
+			throw move_parse_exception("Unrecognized square name/names!");
 		}
 	}
 }
