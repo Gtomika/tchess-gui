@@ -12,8 +12,8 @@ TChess application, providing the chess logic.
 
 # Download
 
-When there will be a working version I'll put it in 
-downloads, so you don't have to build it.
+Download from the [releases page](https://github.com/Gtomika/tchess-gui/releases). 
+Make sure to keep the *res* folder where the *exe* file is.
 
 # How to build
 
