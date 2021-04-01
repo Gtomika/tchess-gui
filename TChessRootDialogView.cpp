@@ -170,10 +170,12 @@ void TChessRootDialogView::createSaveGame()
 void TChessRootDialogView::OnBnClickedStartGameButton()
 {
 	if (gameObject != nullptr && gameObject->gameOngoing()) {
-		//there is an active game. ask confirmation
-		int res = AfxMessageBox(_T("A game is in progress. Are you sure you want to start a new one?"), MB_YESNO | MB_ICONWARNING);
-		if (res != IDYES) return; //user chose to abort
+		//there is an active game.
+		AfxMessageBox(_T("A game is in progress. Please finish it before starting a new one!"), MB_OK | MB_ICONWARNING);
+		return; 
 	}
+	//clear move list
+	moveList.DeleteAllItems();
 	//extract text from combo boxes
 	CString whiteSelected;
 	whiteSelected.Empty();
@@ -216,6 +218,7 @@ void TChessRootDialogView::OnBnClickedMakeMove()
 LRESULT TChessRootDialogView::OnMoveCalculated(WPARAM wp, LPARAM lp)
 {
 	moveGenerationStatusText.SetWindowText(_T("Moves generation not in progress"));
+	moveGenerationProgress.SetPos(0);
 	tchess::move* m = reinterpret_cast<tchess::move*>(lp); //cast lp to move pointer
 	gameObject->submitMove(*m); //give move to the controller
 	delete m;
@@ -268,7 +271,8 @@ void TChessRootDialogView::OnSquareClicked(UINT squareId)
 			try {
 				char pieceCode = tchess::pieceNameFromCode(std::abs(gameObject->getBoard()[squareFrom]));
 				char promCode = NO_PROMOTION;
-				if (tchess::checkForPromotion(tchess::createSquareName(squareFrom), tchess::createSquareName(squareTo), gameObject->getInfo().getSideToMove())) {
+				if (pieceCode == 'P' && tchess::checkForPromotion(tchess::createSquareName(squareFrom), 
+					tchess::createSquareName(squareTo), gameObject->getInfo().getSideToMove())) {
 					//this move is a promotion, ask for a piece code
 					TChessPromotionDialog dialog;
 					dialog.DoModal();
